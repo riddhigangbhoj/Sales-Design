@@ -596,6 +596,117 @@
     .start-assess svg { width: 11px; height: 11px; }
     .fse-assess { padding: 12px 14px; }
     .fse-assess .start-assess { width: 100%; justify-content: center; padding: 9px; font-size: 12.5px; }
+
+    /* Past-lead status badge (Converted / Not Converted) */
+    .status-badge {
+      margin-left: auto;
+      font-weight: 600; font-size: 11px;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .badge-converted { background: #e6f6ec; color: #1f8a4c; }
+    .badge-notconv   { background: #fdeaea; color: #c0392b; }
+
+    /* ---------------- Weekly Call Summary ---------------- */
+    .summary-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .summary-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 24px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .summary-head h3 { font-size: 14px; font-weight: 700; }
+    .summary-head .week-pill {
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      background: #f1f3f7; padding: 4px 10px; border-radius: 20px;
+    }
+    .summary-head .spacer { flex: 1; }
+    .summary-head .legend { display: flex; gap: 8px; }
+
+    .summary-list {
+      flex: 1; overflow-y: auto;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+      align-content: start;
+    }
+
+    /* A caller row (collapsible) */
+    .person-row {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .person-head {
+      display: flex; align-items: center; gap: 13px;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+    .person-head:hover { background: #f8fafc; }
+    .person-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--blue-soft); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .person-avatar.fse { background: #efe9fc; color: #6b3fc4; }
+    .person-id { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .person-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .team-badge {
+      align-self: flex-start;
+      font-size: 10px; font-weight: 700; letter-spacing: .03em;
+      padding: 2px 9px; border-radius: 20px; text-transform: uppercase;
+    }
+    .team-sales { background: var(--blue-soft); color: var(--blue); }
+    .team-fse   { background: #efe9fc; color: #6b3fc4; }
+    .person-total { margin-left: auto; text-align: right; line-height: 1.05; }
+    .person-total .num { font-size: 20px; font-weight: 800; color: var(--text); }
+    .person-total .lbl { font-size: 11px; color: var(--text-muted); }
+    .person-chevron { width: 16px; height: 16px; color: var(--text-muted); transition: transform .15s ease; flex-shrink: 0; }
+    .person-row.expanded .person-chevron { transform: rotate(180deg); }
+
+    .person-body { display: none; border-top: 1px solid var(--border-soft); }
+    .person-row.expanded .person-body { display: block; }
+    .person-body .ai-summary { border-top: none; }
+
+    .call-list-head {
+      padding: 12px 16px 2px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--text-muted);
+    }
+    .call-item {
+      display: flex; flex-direction: column; gap: 9px;
+      padding: 13px 16px;
+      border-top: 1px solid var(--border-soft);
+    }
+    .call-top { display: flex; align-items: center; gap: 11px; }
+    .call-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: #f1f3f7; color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .call-icon svg { width: 15px; height: 15px; stroke-width: 1.8; }
+    .call-meta { display: flex; flex-direction: column; min-width: 0; }
+    .call-lead { font-size: 13px; font-weight: 600; color: var(--text); }
+    .call-when { font-size: 11.5px; color: var(--text-muted); }
+    .rec-btn {
+      margin-left: auto;
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid var(--border); background: #fff;
+      color: var(--text); font-weight: 600; font-size: 12px;
+      padding: 6px 12px; border-radius: 20px; cursor: pointer; white-space: nowrap;
+    }
+    .rec-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .rec-btn svg { width: 11px; height: 11px; color: var(--blue); }
+    .rec-btn .dur { color: var(--text-muted); font-weight: 600; }
+    .call-ai {
+      display: flex; gap: 8px;
+      background: var(--blue-soft);
+      border-radius: 9px;
+      padding: 9px 11px;
+      font-size: 12px; line-height: 1.5; color: #5e6f9e;
+    }
+    .call-ai svg { width: 13px; height: 13px; color: var(--blue); flex-shrink: 0; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -847,13 +958,182 @@
         </div>`;
     }
 
+    const ICON_SPARK = '<path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4z"/>';
+
+    // Past lead card — same profile, plus sales+FSE call history, both AI summaries, report link.
+    function pastCard(status) {
+      const conn = [{ label: 'Connected Info (added by sales)', full: true, head: true, cls: 'conn-head' }]
+        .concat(CONNECTED_FIELDS.map(l => ({ label: l })));
+      const hist = [
+        { label: 'Call History', full: true, head: true },
+        { label: 'Sales Team Calls' },
+        { label: 'FSE Calls' }
+      ];
+      const badge = status === 'Converted' ? 'badge-converted' : 'badge-notconv';
+      const summary = (title, text) => `
+        <div class="ai-summary">
+          <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>${title}</div>
+          <div class="ai-summary-body">${text}</div>
+        </div>`;
+      return `
+        <div class="lead-card fse-card">
+          <div class="lc-head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PERSON}</svg>
+            <span class="lc-title">Lead Profile</span>
+            <span class="status-badge ${badge}">${status}</span>
+            <svg class="lc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="fse-card-body">
+            <div class="pgrid">${LEAD_PARAMS.map(i => cell(i, false)).join('')}</div>
+            <div class="pgrid">${conn.map(i => cell(i, false)).join('')}</div>
+            <div class="pgrid">${hist.map(i => cell(i, false)).join('')}</div>
+            ${summary('AI Summary — First Page (Sales)', 'AI-generated summary from the sales / first-page stage will appear here.')}
+            ${summary('AI Summary — FSE Assessment', 'AI-generated summary from the FSE assessment will appear here.')}
+            <div class="fse-assess">
+              <a class="start-assess" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                View Report
+              </a>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function pastTab() {
+      return `
+        <div class="fse-panel">
+          <section class="fse-section">
+            <div class="fse-section-head">Converted</div>
+            <div class="fse-section-body">${pastCard('Converted')}</div>
+          </section>
+          <section class="fse-section">
+            <div class="fse-section-head">Not Converted</div>
+            <div class="fse-section-body">${pastCard('Not Converted')}</div>
+          </section>
+        </div>`;
+    }
+
+    // ---- Weekly Call Summary ----
+    const ICON_PHONE_CALL = '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>';
+
+    // Weekly calls per caller — Sales and FSE team members. (Week of 18–24 May 2026)
+    const WEEKLY_CALLERS = [
+      {
+        name: 'Aarav Mehta', team: 'Sales', initials: 'AM', total: 24,
+        weekAI: 'Consistent qualification calls with solid discovery. Strong at surfacing pain points; could push harder on booking the FSE trial within the first call.',
+        log: [
+          { lead: 'Ananya Sharma', when: 'Mon, 18 May · 10:24 AM', dur: '06:12', ai: 'Knee pain, booking for self. High intent, comfortable with online. Moved to FSE — online trial scheduled.' },
+          { lead: 'Vikram Rao',    when: 'Tue, 19 May · 02:40 PM', dur: '04:38', ai: 'Enquiring for father (62). Wants offline trial near Indiranagar. Price-sensitive; needs a follow-up on plans.' },
+          { lead: 'Meera Joshi',   when: 'Thu, 21 May · 11:05 AM', dur: '03:21', ai: 'Post-pregnancy fitness goals, prefers online. Asked for trainer credentials before committing.' }
+        ]
+      },
+      {
+        name: 'Priya Nair', team: 'Sales', initials: 'PN', total: 18,
+        weekAI: 'Warm, empathetic calls with good rapport. Conversion strong on online leads; a few offline follow-ups are slipping — pending callbacks.',
+        log: [
+          { lead: 'Rahul Verma', when: 'Mon, 18 May · 09:50 AM', dur: '05:02', ai: 'Lower-back pain, desk job. Self booking, online preferred. Qualified — handed to FSE.' },
+          { lead: 'Sara Khan',   when: 'Tue, 19 May · 04:15 PM', dur: '07:44', ai: 'Diabetes-management goal. Interested in an offline trial; awaiting slot confirmation.' },
+          { lead: 'Aditya Nair', when: 'Thu, 21 May · 01:12 PM', dur: '02:55', ai: 'Quick call — not ready yet, requested a callback next week. Low urgency.' }
+        ]
+      },
+      {
+        name: 'Rohan Gupta', team: 'FSE', initials: 'RG', total: 15,
+        weekAI: 'Thorough assessments with clear plan explanations and a high trial-to-conversion rate. A couple of sessions ran long — watch scheduling buffers.',
+        log: [
+          { lead: 'Ananya Sharma', when: 'Tue, 19 May · 05:30 PM', dur: '18:20', ai: 'Online trial assessment. Mobility screen done; recommended a 3×/week plan. Client convinced — likely to convert.' },
+          { lead: 'Karan Bhatia',  when: 'Wed, 20 May · 10:00 AM', dur: '21:05', ai: 'Offline trial at the centre. Strength baseline taken. Some hesitation on pricing; sent plan options.' },
+          { lead: 'Divya Menon',   when: 'Thu, 21 May · 03:45 PM', dur: '15:48', ai: 'Online trial, knee-rehab focus. Explained progression; client requested a nutrition add-on.' }
+        ]
+      },
+      {
+        name: 'Sneha Iyer', team: 'FSE', initials: 'SI', total: 12,
+        weekAI: 'Strong technical assessments, especially rehab cases. Could improve on summarising clear next steps for the client at the end of each call.',
+        log: [
+          { lead: 'Vikram Rao',  when: 'Wed, 20 May · 06:00 PM', dur: '19:32', ai: 'Offline trial for father. Gentle mobility plan proposed; family supportive — offline plan likely.' },
+          { lead: 'Neha Kapoor', when: 'Thu, 21 May · 11:30 AM', dur: '16:10', ai: 'Online trial, PCOS fitness goals. Built a 4-week starter plan; good engagement throughout.' },
+          { lead: 'Arjun Das',   when: 'Fri, 22 May · 02:20 PM', dur: '13:27', ai: 'Online trial, weight-loss goal. Set expectations on timeline; client comfortable to proceed.' }
+        ]
+      }
+    ];
+
+    function callItem(c) {
+      return `
+        <div class="call-item">
+          <div class="call-top">
+            <div class="call-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PHONE_CALL}</svg></div>
+            <div class="call-meta">
+              <span class="call-lead">${c.lead}</span>
+              <span class="call-when">${c.when}</span>
+            </div>
+            <button type="button" class="rec-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg>
+              Recording <span class="dur">${c.dur}</span>
+            </button>
+          </div>
+          <div class="call-ai">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>
+            <span>${c.ai}</span>
+          </div>
+        </div>`;
+    }
+
+    function personRow(p) {
+      const teamCls = p.team === 'Sales' ? 'team-sales' : 'team-fse';
+      const avCls = p.team === 'Sales' ? '' : 'fse';
+      return `
+        <div class="person-row">
+          <div class="person-head">
+            <div class="person-avatar ${avCls}">${p.initials}</div>
+            <div class="person-id">
+              <span class="person-name">${p.name}</span>
+              <span class="team-badge ${teamCls}">${p.team} Team</span>
+            </div>
+            <div class="person-total">
+              <div class="num">${p.total}</div>
+              <div class="lbl">calls this week</div>
+            </div>
+            <svg class="person-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="person-body">
+            <div class="ai-summary">
+              <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>AI Summary — This Week</div>
+              <div class="ai-summary-body">${p.weekAI}</div>
+            </div>
+            <div class="call-list-head">Calls this week · ${p.total} total</div>
+            ${p.log.map(callItem).join('')}
+          </div>
+        </div>`;
+    }
+
+    function summaryTab() {
+      return `
+        <div class="summary-wrap">
+          <div class="summary-head">
+            <h3>Weekly Call Summary</h3>
+            <span class="week-pill">Week of 18 – 24 May 2026</span>
+            <span class="spacer"></span>
+            <div class="legend">
+              <span class="team-badge team-sales">Sales Team</span>
+              <span class="team-badge team-fse">FSE Team</span>
+            </div>
+          </div>
+          <div class="summary-list">
+            ${WEEKLY_CALLERS.map(personRow).join('')}
+          </div>
+        </div>`;
+    }
+
     function setLeadsTab(tab) {
       document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      document.getElementById('tabContent').innerHTML = tab === 'fse' ? fseTab() : leadsTab();
+      const html = tab === 'fse' ? fseTab() : tab === 'past' ? pastTab() : tab === 'summary' ? summaryTab() : leadsTab();
+      document.getElementById('tabContent').innerHTML = html;
       const cb = document.getElementById('connectBtn');
       if (cb) cb.addEventListener('click', openConnectModal);
       document.querySelectorAll('.fse-card .lc-head').forEach(h =>
         h.addEventListener('click', () => h.closest('.fse-card').classList.toggle('expanded'))
+      );
+      document.querySelectorAll('.person-head').forEach(h =>
+        h.addEventListener('click', () => h.closest('.person-row').classList.toggle('expanded'))
       );
     }
 
@@ -987,6 +1267,8 @@
             <div class="seg">
               <button class="seg-btn active" data-tab="leads">Leads</button>
               <button class="seg-btn" data-tab="fse">FSE Panel</button>
+              <button class="seg-btn" data-tab="past">Past Leads</button>
+              <button class="seg-btn" data-tab="summary">Weekly Summary</button>
             </div>
           </div>
           <div class="ws-content" id="tabContent"></div>
