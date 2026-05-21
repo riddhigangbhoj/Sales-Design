@@ -684,8 +684,9 @@
     // --- State for the single demo lead ---
     const lead = {
       stage: 'lead',   // 'lead' (Leads tab) | 'fse' (handed off to FSE Panel)
-      mode: null,      // 'online' | 'offline'
-      trial: null      // 'online' | 'offline' (trial type, only when mode === offline)
+      mode: null,      // 'online' | 'offline' (subscription type)
+      trial: null,     // 'online' | 'offline' (trial type, only when mode === offline)
+      slot: null       // selected FSE call slot time
     };
 
     // Main lead params — paired into a 2-column grid.
@@ -783,7 +784,7 @@
           <div class="fse-sched">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/></svg>
             <span class="sched-label">FSE Call Schedule Time</span>
-            <span class="sched-val">—</span>
+            <span class="sched-val">${lead.slot || '—'}</span>
           </div>
           <div class="fse-assess">${startAssess(assessDoc())}</div>
           <div class="fse-card-body">
@@ -889,7 +890,8 @@
     }
 
     function updateConnectEnabled() {
-      const ok = lead.mode === 'online' || (lead.mode === 'offline' && !!lead.trial);
+      const typeOk = lead.mode === 'online' || (lead.mode === 'offline' && !!lead.trial);
+      const ok = typeOk && !!lead.slot;
       const btn = document.getElementById('modalConnect');
       if (btn) btn.disabled = !ok;
     }
@@ -902,6 +904,7 @@
     function openConnectModal() {
       lead.mode = null;
       lead.trial = null;
+      lead.slot = null;
       const overlay = document.createElement('div');
       overlay.className = 'modal-overlay';
       overlay.id = 'connectModal';
@@ -920,13 +923,24 @@
               <div class="form-section-title">Capture Customer Information</div>
               ${CUSTOMER_FIELDS.map(formField).join('')}
               <div class="form-field">
-                <label>Engagement Mode</label>
+                <label>Subscription Type</label>
                 <div class="capsules" id="modeCapsules">
                   <button type="button" class="capsule" data-mode="online">Online</button>
                   <button type="button" class="capsule" data-mode="offline">Offline</button>
                 </div>
               </div>
               <div id="modeExtra"></div>
+              <div class="form-field">
+                <label>FSE Call Slot Time</label>
+                <select class="form-input" id="slotSelect">
+                  <option value="" selected disabled>Select a slot…</option>
+                  <option>Today · 4:00 PM</option>
+                  <option>Today · 6:00 PM</option>
+                  <option>Tomorrow · 11:00 AM</option>
+                  <option>Tomorrow · 3:00 PM</option>
+                  <option>Tomorrow · 6:30 PM</option>
+                </select>
+              </div>
             </div>
             <div class="form-section">
               <div class="form-section-title">Notes <span class="opt">(optional)</span></div>
@@ -939,6 +953,10 @@
           </div>
         </div>`;
       document.body.appendChild(overlay);
+
+      overlay.addEventListener('change', (e) => {
+        if (e.target.id === 'slotSelect') { lead.slot = e.target.value; updateConnectEnabled(); }
+      });
 
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay || e.target.closest('#modalClose') || e.target.closest('#modalCancel')) {
