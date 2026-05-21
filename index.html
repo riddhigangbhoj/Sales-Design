@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetic Age — Leads</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --border: #e8eaee;
+      --border-soft: #eef0f3;
+      --text: #1f2430;
+      --text-muted: #8a90a0;
+      --text-dim: #aab0bd;
+      --blue: #2f6bf6;
+      --blue-soft: #eaf1fe;
+      --blue-soft-text: #2f6bf6;
+      --blue-divider: #cfdef9;
+      --radius: 12px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ---------------- Sidebar ---------------- */
+    .sidebar {
+      width: 232px;
+      flex-shrink: 0;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 20px 16px;
+    }
+    .brand .logo {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2f6bf6, #6f9bff);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 14px;
+    }
+    .brand .brand-text { line-height: 1.15; }
+    .brand .brand-name { font-weight: 700; font-size: 15px; }
+    .brand .brand-sub { font-size: 11px; color: var(--text-muted); }
+
+    .nav-label {
+      padding: 14px 20px 6px;
+      font-size: 11px;
+      text-transform: none;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .nav { padding: 0 12px 16px; display: flex; flex-direction: column; gap: 1px; }
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #5b6172;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+    .nav a:hover { background: #f4f6f9; color: var(--text); }
+    .nav a.active { background: var(--blue-soft); color: var(--blue-soft-text); }
+    .nav a svg { width: 17px; height: 17px; flex-shrink: 0; stroke-width: 1.8; }
+
+    /* ---------------- Content ---------------- */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 60px;
+      flex-shrink: 0;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 22px;
+    }
+    .icon-btn {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      color: #6b7180; cursor: pointer;
+    }
+    .icon-btn svg { width: 17px; height: 17px; }
+
+    .topbar .search {
+      flex: 1;
+      max-width: 460px;
+      position: relative;
+    }
+    .topbar .search svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--text-dim);
+    }
+    .topbar .search input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fafbfc;
+      padding: 0 12px 0 36px;
+      font-size: 13.5px;
+      color: var(--text);
+      outline: none;
+    }
+    .topbar .search input::placeholder { color: var(--text-dim); }
+
+    .topbar .spacer { flex: 1; }
+
+    .user {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .user .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--blue-soft); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+    .user .u-name { font-weight: 600; font-size: 13px; line-height: 1.2; }
+    .user .u-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ---------------- Body: leads + workspace ---------------- */
+    .body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* Leads panel */
+    .leads-panel {
+      width: 320px;
+      flex-shrink: 0;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .leads-head {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .leads-head .title-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .leads-head h2 { font-size: 16px; font-weight: 700; }
+    .leads-head .count-pill {
+      font-size: 11px; font-weight: 600;
+      color: var(--blue); background: var(--blue-soft);
+      padding: 3px 8px; border-radius: 20px;
+    }
+    .leads-head p { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; }
+    .leads-search {
+      margin-top: 12px; position: relative;
+    }
+    .leads-search svg {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; color: var(--text-dim);
+    }
+    .leads-search input {
+      width: 100%; height: 36px;
+      border: 1px solid var(--border); border-radius: 9px;
+      background: #fafbfc; padding: 0 12px 0 34px;
+      font-size: 13px; outline: none; color: var(--text);
+    }
+    .leads-search input::placeholder { color: var(--text-dim); }
+
+    .leads-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    /* empty states */
+    .empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-muted);
+      padding: 40px 28px;
+      gap: 12px;
+    }
+    .empty .empty-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: #f1f3f7;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim);
+    }
+    .empty .empty-icon svg { width: 26px; height: 26px; }
+    .empty h3 { font-size: 15px; font-weight: 600; color: #555c6b; }
+    .empty p { font-size: 13px; max-width: 280px; line-height: 1.5; }
+
+    .leads-list .empty { padding: 28px 18px; }
+    .leads-list .empty h3 { font-size: 14px; }
+    .leads-list .empty p { font-size: 12.5px; }
+
+    /* Main workspace */
+    .workspace {
+      flex: 1;
+      display: flex;
+      min-width: 0;
+      background: var(--bg);
+    }
+
+    /* Workspace page with toggle */
+    .ws-page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .ws-toolbar {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--panel);
+    }
+    .seg {
+      display: inline-flex;
+      background: #f1f3f7;
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .seg-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 22px;
+      border-radius: 7px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background .12s, color .12s;
+    }
+    .seg-btn:hover { color: var(--text); }
+    .seg-btn.active {
+      background: #fff;
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+    .ws-content {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* Lead profile cards */
+    .lead-grid {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 360px));
+      gap: 16px;
+      align-content: start;
+    }
+    .lead-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .lc-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .lc-head svg { width: 16px; height: 16px; color: var(--blue); stroke-width: 1.8; }
+    .lc-title { font-size: 13px; font-weight: 700; color: var(--text); }
+
+    /* Parameter grid — 2 columns, dividers drawn by 1px gaps */
+    .pgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border-soft);
+    }
+    .pcell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: var(--text);
+      background: var(--panel);
+      min-width: 0;
+    }
+    .pcell.full { grid-column: 1 / -1; }
+
+    /* Blue section: same grid, but a blue-tinted divider so the lines are visible */
+    .pgrid-ai {
+      background: var(--blue-divider);
+      border-top: 1px solid var(--border-soft);
+    }
+    .pcell svg { width: 14px; height: 14px; flex-shrink: 0; stroke-width: 1.8; }
+
+    /* AI-assisted info (blue) */
+    .pcell.ai {
+      color: var(--blue);
+      background: var(--blue-soft);
+      font-weight: 500;
+    }
+    .pcell.section-head {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .pcell.section-head svg { width: 13px; height: 13px; stroke-width: 1.9; }
+
+    /* Leads tab + AI legend */
+    .lead-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .ai-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      background: var(--panel);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .ai-legend .swatch {
+      width: 13px; height: 13px;
+      border-radius: 4px;
+      background: var(--blue);
+      flex-shrink: 0;
+    }
+    .ai-legend b { color: var(--blue); font-weight: 600; }
+
+    /* FSE panel partitions */
+    .fse-panel {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 16px;
+      overflow-y: auto;
+      align-content: start;
+    }
+    .fse-section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+    }
+    .fse-section-head {
+      padding: 13px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .fse-section-body {
+      flex: 1;
+      padding: 14px;
+      min-height: 0;
+    }
+    /* Two subsections inside Offline */
+    .fse-sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .fse-subsection {
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      min-height: 150px;
+    }
+    .fse-sub-head {
+      padding: 10px 13px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .fse-sub-body { flex: 1; padding: 12px; }
+    .fse-section-body .lead-card,
+    .fse-sub-body .lead-card { max-width: 480px; }
+    .fse-hint {
+      height: 100%;
+      min-height: 90px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim); font-size: 12.5px; text-align: center;
+    }
+
+    /* Connect button on the lead card */
+    .lc-foot { padding: 12px 14px; border-top: 1px solid var(--border-soft); }
+    .btn-primary {
+      width: 100%;
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+    .btn-primary:hover { filter: brightness(.96); }
+    .btn-primary:disabled { background: #b9c6e6; cursor: not-allowed; }
+    .btn-ghost {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      font-weight: 600; font-size: 13px;
+      padding: 10px 16px; border-radius: 9px; cursor: pointer;
+    }
+    .btn-ghost:hover { background: #f4f6f9; }
+
+    /* Connect type capsule + sales-added info header */
+    .lc-head .type-capsule {
+      margin-left: auto;
+      background: var(--blue-soft); color: var(--blue);
+      font-weight: 600; font-size: 11px;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .pcell.conn-head { background: #eef7f0; color: #2f7d4f; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(20, 26, 40, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; padding: 24px;
+    }
+    .modal {
+      background: var(--panel);
+      width: 100%; max-width: 560px;
+      max-height: 88vh;
+      border-radius: 14px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(16, 24, 40, .25);
+    }
+    .modal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border-soft);
+      font-size: 15px; font-weight: 700;
+    }
+    .modal-close {
+      border: none; background: transparent; font-size: 24px; line-height: 1;
+      color: var(--text-muted); cursor: pointer;
+    }
+    .modal-body { padding: 18px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 22px; }
+    .modal-foot {
+      display: flex; justify-content: flex-end; gap: 10px;
+      padding: 14px 20px; border-top: 1px solid var(--border-soft);
+    }
+    .modal-foot .btn-primary { width: auto; }
+
+    /* Form */
+    .form-section { display: flex; flex-direction: column; gap: 12px; }
+    .form-section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--blue);
+    }
+    .form-section-title .opt { color: var(--text-dim); font-weight: 500; text-transform: none; }
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field > label { font-size: 12.5px; font-weight: 600; color: var(--text); }
+    .form-input, .form-textarea {
+      border: 1px solid var(--border); border-radius: 9px;
+      padding: 9px 11px; font-size: 13px; color: var(--text);
+      background: #fafbfc; outline: none; font-family: inherit;
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--blue); background: #fff; }
+    .form-textarea { min-height: 70px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Capsules */
+    .capsules { display: flex; gap: 8px; flex-wrap: wrap; }
+    .capsule {
+      border: 1px solid var(--border); background: #fff;
+      color: var(--text-muted); font-weight: 600; font-size: 12.5px;
+      padding: 7px 16px; border-radius: 20px; cursor: pointer;
+    }
+    .capsule:hover { border-color: var(--blue); color: var(--blue); }
+    .capsule.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .mode-note { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+    .tag-online {
+      background: var(--blue-soft); color: var(--blue); font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; font-size: 12px;
+    }
+
+    /* Collapsible FSE card — small profile block, expands on click */
+    .fse-card .lc-head { cursor: pointer; }
+    .fse-card .lc-head:hover { background: #f8fafc; }
+    .fse-card .lc-chevron {
+      color: var(--text-muted);
+      transition: transform .15s ease;
+      margin-left: 2px;
+    }
+    .fse-card.expanded .lc-chevron { transform: rotate(180deg); }
+    .fse-card .fse-card-body { display: none; }
+    .fse-card.expanded .fse-card-body { display: block; }
+
+    /* Highlighted FSE call schedule (always visible in the profile block) */
+    .fse-sched {
+      display: flex; align-items: center; gap: 8px;
+      padding: 11px 14px;
+      background: #fff4e5;
+      color: #b25e09;
+      font-size: 12.5px; font-weight: 600;
+    }
+    .fse-sched svg { width: 15px; height: 15px; stroke-width: 1.9; flex-shrink: 0; }
+    .fse-sched .sched-label { color: #8a5a16; font-weight: 700; }
+    .fse-sched .sched-val { margin-left: auto; color: #b25e09; }
+
+    /* AI summary block — bigger, at the end of the info */
+    .ai-summary {
+      background: var(--blue-soft);
+      border-top: 1px solid var(--border-soft);
+      padding: 14px 16px 16px;
+    }
+    .ai-summary-head {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--blue);
+      margin-bottom: 9px;
+    }
+    .ai-summary-head svg { width: 14px; height: 14px; stroke-width: 1.9; }
+    .ai-summary-body {
+      min-height: 72px;
+      font-size: 12.5px; line-height: 1.55;
+      color: #7f93c4;
+    }
+
+    /* Start Assessment link per FSE section */
+    .fse-section-head, .fse-sub-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .start-assess {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11.5px; font-weight: 600;
+      color: var(--blue); background: var(--blue-soft);
+      padding: 5px 10px; border-radius: 7px;
+      text-decoration: none; white-space: nowrap;
+    }
+    .start-assess:hover { background: #dbe7fd; }
+    .start-assess svg { width: 11px; height: 11px; }
+    .fse-assess { padding: 12px 14px; }
+    .fse-assess .start-assess { width: 100%; justify-content: center; padding: 9px; font-size: 12.5px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">KA</div>
+        <div class="brand-text">
+          <div class="brand-name">Kinetic Age</div>
+          <div class="brand-sub">Admin Panel</div>
+        </div>
+      </div>
+
+      <div class="nav-label">Navigation</div>
+      <nav class="nav">
+        <a href="#" data-page="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 13h8V3H3zM13 21h8V3h-8zM3 21h8v-6H3z"/></svg>Dashboard</a>
+        <a href="#" data-page="Analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Analytics</a>
+        <a href="#" data-page="Clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>Clients</a>
+        <a href="#" data-page="Trainers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v6l8 4 8-4V7"/></svg>Trainers</a>
+        <a href="#" data-page="Nutrition"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"/></svg>Nutrition</a>
+        <a href="#" data-page="Sessions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Sessions</a>
+        <a href="#" data-page="Pending Exercise Plans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>Pending Exercise Plans</a>
+        <a href="#" data-page="Leaves"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>Leaves</a>
+        <a href="#" data-page="Reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>Reports</a>
+        <a href="#" data-page="Trials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l2.4 7.4H22l-6 4.3 2.3 7.3-6.3-4.6L5.7 21 8 14 2 9.6h7.6z"/></svg>Trials</a>
+        <a href="#" data-page="Audits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 5-3.5 7.5-8.6 8.9a1 1 0 0 1-.8 0C6.5 19.5 3 17 3 12V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1 1 0 0 1 1.6 0C13.5 3.8 16 5 18 5a1 1 0 0 1 1 1z"/></svg>Audits</a>
+        <a href="#" data-page="Reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z"/></svg>Reviews</a>
+        <a href="#" data-page="CRM"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>CRM</a>
+        <a href="#" data-page="Call Analysis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Call Analysis</a>
+        <a href="#" data-page="Universal OTP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Universal OTP</a>
+        <a href="#" class="active" data-page="Leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg>Leads</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <button class="icon-btn" title="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" placeholder="Search leads, clients, sessions..." />
+        </div>
+        <div class="spacer"></div>
+        <div class="user">
+          <div class="avatar">AD</div>
+          <div>
+            <div class="u-name">Riddhi</div>
+            <div class="u-role">Admin</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Body -->
+      <div class="body">
+        <!-- Main workspace (content swapped by nav) -->
+        <main class="workspace" id="workspace"></main>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const workspace = document.getElementById('workspace');
+    const navLinks = document.querySelectorAll('.nav a');
+
+    function empty(iconPath, title, text) {
+      return `
+        <div class="empty">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">${iconPath}</svg>
+          </div>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>`;
+    }
+
+    const ICON_LEADS = '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3 3-2-2"/>';
+    const ICON_FSE = '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>';
+    const ICON_DOC = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>';
+
+    const ICON_PERSON = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>';
+
+    // --- State for the single demo lead ---
+    const lead = {
+      stage: 'lead',   // 'lead' (Leads tab) | 'fse' (handed off to FSE Panel)
+      mode: null,      // 'online' | 'offline'
+      trial: null      // 'online' | 'offline' (trial type, only when mode === offline)
+    };
+
+    // Main lead params — paired into a 2-column grid.
+    const LEAD_PARAMS = [
+      { label: 'Name' },          { label: 'Phone Number' },
+      { label: 'Email' },         { label: 'Enquiring For' },
+      { label: 'Age' },           { label: 'Gender' },
+      { label: 'Conditions' },    { label: 'Fitness Goals' },
+      { label: 'Lead Type' },     { label: 'Campaign Type' },
+      { label: 'Booking Time', full: true }
+    ];
+
+    // AI-assisted info (blue) — a heading followed by its 4 items, at the bottom.
+    const AI_CELLS = [
+      { label: 'Previously Connected Info', full: true, head: true },
+      { label: 'Call Recordings' },
+      { label: 'Total Previous Sessions' },
+      { label: 'Previous Sessions (date & time)' },
+      { label: 'Previous Campaign Type' }
+    ];
+
+    // Fields the sales team captures in the Connect & Add Info form.
+    const SITUATION_FIELDS = [
+      'Booking for self or parent',
+      'Age and Gender of Patient',
+      'Pain Points of Patient',
+      'Patient Chronic Conditions',
+      'Patient Fitness Goals'
+    ];
+    const CUSTOMER_FIELDS = ['Location', 'Paying Capacity', 'Enquirer Profession'];
+
+    // The same captured info, summarised as blocks on the FSE card.
+    const CONNECTED_FIELDS = [
+      'Booking For (Self / Parent)', 'Age & Gender of Patient',
+      'Pain Points of Patient', 'Patient Chronic Conditions',
+      'Patient Fitness Goals', 'Location',
+      'Paying Capacity', 'Enquirer Profession'
+    ];
+
+    function cell(item, ai) {
+      const cls = ['pcell'];
+      if (item.full) cls.push('full');
+      if (ai) cls.push('ai');
+      if (item.head) cls.push('section-head');
+      if (item.cls) cls.push(item.cls);
+      return `<div class="${cls.join(' ')}">${item.label}</div>`;
+    }
+
+    function leadCard(showButton) {
+      return `
+        <div class="lead-card">
+          <div class="lc-head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PERSON}</svg>
+            <span class="lc-title">Lead Profile</span>
+          </div>
+          <div class="pgrid">${LEAD_PARAMS.map(i => cell(i, false)).join('')}</div>
+          <div class="pgrid pgrid-ai">${AI_CELLS.map(i => cell(i, true)).join('')}</div>
+          ${showButton ? `<div class="lc-foot"><button class="btn-primary" id="connectBtn">Connect & Add Info</button></div>` : ''}
+        </div>`;
+    }
+
+    function leadsTab() {
+      const body = lead.stage === 'fse'
+        ? empty(ICON_LEADS, 'Lead moved to FSE Panel', 'This lead was connected and handed off — open the FSE Panel tab to see it.')
+        : `<div class="lead-grid">${leadCard(true)}</div>`;
+      return `
+        <div class="lead-tab">
+          <div class="ai-legend">
+            <span class="swatch"></span>
+            <span><b>Blue</b> represents AI-assisted info</span>
+          </div>
+          ${body}
+        </div>`;
+    }
+
+    function typeLabel() {
+      if (lead.mode === 'online') return 'Online';
+      if (lead.mode === 'offline') return 'Offline · ' + (lead.trial === 'online' ? 'Online Trial' : 'Offline Trial');
+      return 'Connected';
+    }
+
+    // FSE card — full lead profile + the info sales captured + sales call recording.
+    function fseCard() {
+      const conn = [{ label: 'Connected Info (added by sales)', full: true, head: true, cls: 'conn-head' }]
+        .concat(CONNECTED_FIELDS.map(l => ({ label: l })));
+      const blue = AI_CELLS.concat([{ label: 'Sales Team Call Recording', full: true }]);
+      return `
+        <div class="lead-card fse-card">
+          <div class="lc-head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PERSON}</svg>
+            <span class="lc-title">Lead Profile</span>
+            <span class="type-capsule">${typeLabel()}</span>
+            <svg class="lc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="fse-sched">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/></svg>
+            <span class="sched-label">FSE Call Schedule Time</span>
+            <span class="sched-val">—</span>
+          </div>
+          <div class="fse-assess">${startAssess(assessDoc())}</div>
+          <div class="fse-card-body">
+            <div class="pgrid">${LEAD_PARAMS.map(i => cell(i, false)).join('')}</div>
+            <div class="pgrid">${conn.map(i => cell(i, false)).join('')}</div>
+            <div class="pgrid pgrid-ai">${blue.map(i => cell(i, true)).join('')}</div>
+            <div class="ai-summary">
+              <div class="ai-summary-head">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4z"/></svg>
+                AI Summary of Client
+              </div>
+              <div class="ai-summary-body">AI-generated summary of the client will appear here.</div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    const fseHint = () => `<div class="fse-hint">No leads here yet</div>`;
+
+    // Assessment docs per FSE section type.
+    const ASSESS_DOCS = {
+      online:       'https://docs.google.com/document/d/1TeBgQNwzpyCAjk00chczFi7L7uQs6eJcoF9kaEZwD0E/edit?tab=t.0',
+      onlineTrial:  'https://docs.google.com/document/d/1jXyg72WnAGvLKrLoEcf1BxAlMPeIRMQ87qX4xsT4Ivc/edit?tab=t.0',
+      offlineTrial: 'https://docs.google.com/document/d/1XNATDHqLOzV0vkmuMD7wvRZ1zqETrevh7mRHdhJRxaA/edit?tab=t.0'
+    };
+    const startAssess = (href) =>
+      `<a class="start-assess" href="${href}" target="_blank" rel="noopener">` +
+      `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg>Start Assessment</a>`;
+
+    // The assessment doc that matches this card's type.
+    function assessDoc() {
+      if (lead.mode === 'offline') return lead.trial === 'online' ? ASSESS_DOCS.onlineTrial : ASSESS_DOCS.offlineTrial;
+      return ASSESS_DOCS.online;
+    }
+
+    function fseTab() {
+      const moved = lead.stage === 'fse';
+      const online      = moved && lead.mode === 'online' ? fseCard() : fseHint();
+      const onlineTrial  = moved && lead.mode === 'offline' && lead.trial === 'online'  ? fseCard() : fseHint();
+      const offlineTrial = moved && lead.mode === 'offline' && lead.trial === 'offline' ? fseCard() : fseHint();
+      return `
+        <div class="fse-panel">
+          <section class="fse-section">
+            <div class="fse-section-head">Online</div>
+            <div class="fse-section-body">${online}</div>
+          </section>
+          <section class="fse-section">
+            <div class="fse-section-head">Offline</div>
+            <div class="fse-section-body fse-sub-grid">
+              <div class="fse-subsection">
+                <div class="fse-sub-head">Online Trial</div>
+                <div class="fse-sub-body">${onlineTrial}</div>
+              </div>
+              <div class="fse-subsection">
+                <div class="fse-sub-head">Offline Trial</div>
+                <div class="fse-sub-body">${offlineTrial}</div>
+              </div>
+            </div>
+          </section>
+        </div>`;
+    }
+
+    function setLeadsTab(tab) {
+      document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.getElementById('tabContent').innerHTML = tab === 'fse' ? fseTab() : leadsTab();
+      const cb = document.getElementById('connectBtn');
+      if (cb) cb.addEventListener('click', openConnectModal);
+      document.querySelectorAll('.fse-card .lc-head').forEach(h =>
+        h.addEventListener('click', () => h.closest('.fse-card').classList.toggle('expanded'))
+      );
+    }
+
+    // ---- Connect & Add Info modal ----
+    function formField(label) {
+      if (label === 'Booking for self or parent') {
+        return `<div class="form-field"><label>${label}</label>
+          <div class="capsules"><button type="button" class="capsule">Self</button><button type="button" class="capsule">Parent</button></div></div>`;
+      }
+      if (label === 'Age and Gender of Patient') {
+        return `<div class="form-field"><label>${label}</label>
+          <div class="form-row"><input class="form-input" placeholder="Age" /><input class="form-input" placeholder="Gender" /></div></div>`;
+      }
+      return `<div class="form-field"><label>${label}</label><input class="form-input" placeholder="${label}" /></div>`;
+    }
+
+    function renderModeExtra() {
+      const ex = document.getElementById('modeExtra');
+      if (!ex) return;
+      if (lead.mode === 'online') {
+        ex.innerHTML = `<div class="mode-note"><span class="tag-online">Online</span> Lead will be placed in the FSE “Online” section.</div>`;
+      } else if (lead.mode === 'offline') {
+        ex.innerHTML = `
+          <div class="form-field">
+            <label>Trial Type</label>
+            <div class="capsules" id="trialCapsules">
+              <button type="button" class="capsule" data-trial="online">Online Trial</button>
+              <button type="button" class="capsule" data-trial="offline">Offline Trial</button>
+            </div>
+          </div>`;
+      } else {
+        ex.innerHTML = '';
+      }
+    }
+
+    function updateConnectEnabled() {
+      const ok = lead.mode === 'online' || (lead.mode === 'offline' && !!lead.trial);
+      const btn = document.getElementById('modalConnect');
+      if (btn) btn.disabled = !ok;
+    }
+
+    function closeModal() {
+      const o = document.getElementById('connectModal');
+      if (o) o.remove();
+    }
+
+    function openConnectModal() {
+      lead.mode = null;
+      lead.trial = null;
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.id = 'connectModal';
+      overlay.innerHTML = `
+        <div class="modal">
+          <div class="modal-head">
+            <span>Connect & Add Info</span>
+            <button type="button" class="modal-close" id="modalClose">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-section">
+              <div class="form-section-title">Understand Customer Situation &amp; Needs</div>
+              ${SITUATION_FIELDS.map(formField).join('')}
+            </div>
+            <div class="form-section">
+              <div class="form-section-title">Capture Customer Information</div>
+              ${CUSTOMER_FIELDS.map(formField).join('')}
+              <div class="form-field">
+                <label>Engagement Mode</label>
+                <div class="capsules" id="modeCapsules">
+                  <button type="button" class="capsule" data-mode="online">Online</button>
+                  <button type="button" class="capsule" data-mode="offline">Offline</button>
+                </div>
+              </div>
+              <div id="modeExtra"></div>
+            </div>
+            <div class="form-section">
+              <div class="form-section-title">Notes <span class="opt">(optional)</span></div>
+              <textarea class="form-textarea" placeholder="Add anything else worth noting…"></textarea>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <button type="button" class="btn-ghost" id="modalCancel">Cancel</button>
+            <button type="button" class="btn-primary" id="modalConnect" disabled>Connect & Move to FSE</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target.closest('#modalClose') || e.target.closest('#modalCancel')) {
+          closeModal();
+          return;
+        }
+        if (e.target.closest('#modalConnect')) {
+          if (document.getElementById('modalConnect').disabled) return;
+          lead.stage = 'fse';
+          closeModal();
+          setLeadsTab('fse');
+          return;
+        }
+        const cap = e.target.closest('.capsule');
+        if (cap) {
+          cap.parentElement.querySelectorAll('.capsule').forEach(x => x.classList.toggle('active', x === cap));
+          if (cap.dataset.mode) { lead.mode = cap.dataset.mode; lead.trial = null; renderModeExtra(); }
+          if (cap.dataset.trial) { lead.trial = cap.dataset.trial; }
+          updateConnectEnabled();
+        }
+      });
+    }
+
+    function renderLeadsPage() {
+      workspace.innerHTML = `
+        <div class="ws-page">
+          <div class="ws-toolbar">
+            <div class="seg">
+              <button class="seg-btn active" data-tab="leads">Leads</button>
+              <button class="seg-btn" data-tab="fse">FSE Panel</button>
+            </div>
+          </div>
+          <div class="ws-content" id="tabContent"></div>
+        </div>`;
+      document.querySelectorAll('.seg-btn').forEach(b =>
+        b.addEventListener('click', () => setLeadsTab(b.dataset.tab))
+      );
+      setLeadsTab('leads');
+    }
+
+    function setPage(link) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      link.classList.add('active');
+      const page = link.dataset.page;
+      if (page === 'Leads') {
+        renderLeadsPage();
+      } else {
+        workspace.innerHTML = empty(ICON_DOC, page, 'This section is empty for now.');
+      }
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => { e.preventDefault(); setPage(link); });
+    });
+
+    setPage(document.querySelector('.nav a.active'));
+  </script>
+</body>
+</html>
