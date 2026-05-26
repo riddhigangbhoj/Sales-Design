@@ -574,6 +574,26 @@
     .aitem .ai-d { font-size: 12px; color: var(--text-muted); line-height: 1.45; }
     .aitem .ai-when { font-size: 11px; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
     .aempty { font-size: 12.5px; color: var(--text-dim); padding: 6px 2px; }
+    /* Compact new-lead cards — narrow width, multiple per row */
+    .nlead-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(208px, 1fr)); gap: 9px; }
+    .nlead { display: flex; align-items: center; gap: 9px; padding: 8px 11px; background: var(--panel); border: 1px solid var(--border); border-radius: 9px; min-width: 0; }
+    .nlead .nl-ic { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--blue-soft); color: var(--blue); }
+    .nlead .nl-ic svg { width: 14px; height: 14px; }
+    .nlead .nl-main { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+    .nlead .nl-name { font-size: 12.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nlead .nl-meta { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Compact one-liner AI prediction rows */
+    .ai-lines { display: flex; flex-direction: column; gap: 8px; }
+    .ai-line { display: flex; align-items: center; gap: 9px; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 9px; }
+    .ai-line .ai-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .ai-line .ai-line-txt { font-size: 12.5px; color: var(--text-muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ai-line .ai-line-txt b { color: var(--text); font-weight: 700; }
+    .ai-line .ai-act { color: var(--text); font-weight: 600; }
+    .ai-line.sev-warn  .ai-dot { background: #e8920a; }
+    .ai-line.sev-blue  .ai-dot { background: var(--blue); }
+    .ai-line.sev-green .ai-dot { background: #1f8a4c; }
+    .ai-line.sev-red   .ai-dot { background: #c0392b; }
+    .ai-line.sev-purple .ai-dot { background: #6b3fc4; }
 
     /* ---------------- In-call AI cockpit (full-screen) ---------------- */
     .cockpit { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; }
@@ -734,38 +754,79 @@
     .cp-dot.done { background: #1f8a4c; }
     @media (max-width: 900px) { .cp-body { grid-template-columns: 1fr; } .cp-side { border-left: none; border-top: 1px solid var(--border); } }
 
-    /* New cockpit layout: center prompter · right points · bottom notes pad */
-    .cp-body3 { flex: 1; display: grid; grid-template-columns: 1fr 300px; min-height: 0; }
-    .cp-center { overflow: hidden; padding: 14px 22px; }
-    .cp-page { margin-top: 12px; }
-    .cap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    /* ── Single-screen call cockpit: left section status · center prompter+data · bottom notes ── */
+    .cp-rectimer { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; font-size: 13px; color: #c0392b; background: #fdeaea; padding: 6px 12px; border-radius: 20px; font-variant-numeric: tabular-nums; }
+    .cp-rectimer .rdot { width: 8px; height: 8px; border-radius: 50%; background: #c0392b; animation: pulse 1.1s ease-in-out infinite; }
+    .cp-ended { border: none; background: var(--blue); color: #fff; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 9px; cursor: pointer; }
+    .cp-ended:hover { background: #245fe0; }
 
-    .cp-prompt { border: 1px solid var(--border); border-radius: 14px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
-    .cp-prompt-head { display: flex; align-items: center; gap: 9px; padding: 9px 14px; border-bottom: 1px solid var(--border-soft); }
-    .cp-prompt-head .t { font-weight: 700; font-size: 13.5px; }
+    .cp-body2 { flex: 1; display: grid; grid-template-columns: 234px 1fr; min-height: 0; }
+    .cp-left { border-right: 1px solid var(--border); background: var(--panel); overflow-y: auto; }
+    .cp-left-head { padding: 17px 18px 11px; font-size: 13px; font-weight: 700; color: var(--text); }
+    .cp-sec-list { display: flex; flex-direction: column; gap: 10px; padding: 0 14px 16px; }
+    .cp-sec-card { display: flex; align-items: center; gap: 10px; padding: 13px; border: 1.5px solid var(--border); border-radius: 12px; background: #fff; transition: background .3s, border-color .3s, box-shadow .3s; }
+    .cp-sec-card .sc-ic { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #eef0f3; color: var(--text-muted); flex-shrink: 0; }
+    .cp-sec-card .sc-ic svg { width: 16px; height: 16px; }
+    .cp-sec-card .sc-t { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .cp-sec-card .sc-st { margin-left: auto; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--text-dim); }
+    .cp-sec-card.active { border-color: var(--blue); background: var(--blue-soft); box-shadow: 0 0 0 3px rgba(47,107,246,.10); }
+    .cp-sec-card.active .sc-ic { background: var(--blue); color: #fff; }
+    .cp-sec-card.active .sc-st { color: var(--blue); }
+    .cp-sec-card.done { border-color: #cfe9d6; background: #f3fbf6; }
+    .cp-sec-card.done .sc-ic { background: #1f8a4c; color: #fff; }
+    .cp-sec-card.done .sc-st { color: #1f8a4c; }
+    .cp-sec-card.skip { border-color: #f0d9a8; background: #fffaf0; }
+    .cp-sec-card.skip .sc-ic { background: #e8920a; color: #fff; }
+    .cp-sec-card.skip .sc-st { color: #b25e09; }
+
+    .cp-center2 { overflow-y: auto; padding: 20px 26px 26px; display: flex; flex-direction: column; gap: 16px; }
+    .cp-hero { border: 1px solid var(--border); border-left: 4px solid var(--blue); border-radius: 14px; background: var(--panel); box-shadow: var(--shadow); padding: 16px 22px 18px; }
     .cp-hint.empty { display: none; }
-    .cp-hint:not(.empty) { background: #efe9fc; color: #4f2e96; padding: 12px 16px; font-size: 12.5px; line-height: 1.5; border-bottom: 1px solid #e0d6f5; animation: fadeUp .35s ease both; }
+    .cp-hint:not(.empty) { background: #efe9fc; color: #4f2e96; padding: 11px 14px; font-size: 12.5px; line-height: 1.5; border-radius: 10px; margin-bottom: 14px; animation: fadeUp .35s ease both; }
     .cp-hint .hint-lead { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #6b3fc4; margin-bottom: 4px; }
-    .prompt-now { padding: 13px 16px; }
-    .prompt-now .pn-lead { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--blue); }
-    .prompt-now .pn-text { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.35; margin: 6px 0 0; }
-    .prompt-now .pn-btn { width: auto; padding: 9px 18px; }
-    .prompt-now .pn-up { margin-top: 12px; font-size: 12px; color: var(--text-dim); }
-    .prompt-now.done .pn-text { color: #1f8a4c; font-size: 15px; }
+    .pn-label { font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); text-align: center; margin-bottom: 14px; }
+    .cp-prompter { text-align: center; }
+    .cp-prompter .pn-now { font-size: 26px; font-weight: 800; color: var(--blue); line-height: 1.25; animation: flowIn .45s ease both; }
+    .cp-prompter .pn-now.done { color: #1f8a4c; }
+    .cp-prompter .pn-next { font-size: 17px; font-weight: 600; color: var(--text); margin-top: 13px; }
+    .cp-prompter .pn-later { font-size: 14px; font-weight: 500; color: var(--text-dim); margin-top: 8px; }
+    .cp-prompter .pn-sub { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+    .cp-prompter .pn-cue { font-size: 12px; font-weight: 700; color: var(--blue); margin-top: 10px; }
+    .cp-prompter .pn-live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--blue); margin-right: 8px; animation: pulse 1s ease-in-out infinite; vertical-align: middle; }
+    @keyframes flowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-    .cp-points { border-left: 1px solid var(--border); background: var(--panel); overflow: hidden; }
-    .cp-points-head { display: flex; align-items: center; justify-content: space-between; padding: 15px 16px; border-bottom: 1px solid var(--border-soft); font-weight: 700; font-size: 13px; }
-    .cp-points-head .pt-count { font-size: 11px; font-weight: 700; color: var(--blue); background: var(--blue-soft); padding: 3px 9px; border-radius: 20px; }
-    .pt-list { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .pt-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 11px; border: 1px solid var(--border); border-radius: 9px; cursor: pointer; background: #fff; }
-    .pt-row.got { border-color: #cfe9d6; background: #f3fbf6; }
-    .pt-row.miss { border-color: #f3c7c0; background: #fdf1ef; }
-    .pt-ck { width: 20px; height: 20px; border-radius: 50%; background: #eef0f3; color: var(--text-muted); font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-    .pt-ck svg { width: 12px; height: 12px; }
-    .pt-row.got .pt-ck { background: #1f8a4c; color: #fff; }
-    .pt-row.miss .pt-ck { background: #c0392b; color: #fff; }
-    .pt-t { font-size: 12.5px; font-weight: 500; line-height: 1.4; }
-    .pt-row.got .pt-t { color: #1f7a45; }
+    .cp-decision:not(:empty) { margin-top: 16px; border-top: 1px solid var(--border-soft); padding-top: 14px; }
+    .cp-da-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); margin: 14px 0 8px; }
+    .cp-da-label:first-child { margin-top: 0; }
+    .plan-feats { list-style: none; margin: 9px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+    .plan-feats li { font-size: 11.5px; color: var(--text-muted); padding-left: 16px; position: relative; line-height: 1.4; }
+    .plan-feats li::before { content: '✓'; position: absolute; left: 0; color: #1f8a4c; font-weight: 700; }
+    .addon-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .slot-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .slot-grid .form-input { height: 38px; width: 100%; }
+
+    .cp-remind { margin-top: 16px; background: #fff8ec; border: 1px solid #f0d9a8; border-radius: 11px; padding: 11px 14px; transition: border-color .25s, background .25s; }
+    .cp-remind.nag { border-color: #e0a93f; background: #fdf2da; box-shadow: 0 0 0 3px rgba(224,146,10,.12); }
+    .cp-remind .rm-head { font-size: 12px; font-weight: 700; color: #8a5a16; }
+    .cp-remind .rm-chips { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .cp-remind .rm-chip { font-size: 11.5px; font-weight: 600; color: #b25e09; background: #fff; border: 1px solid #f0d9a8; border-radius: 20px; padding: 4px 11px; }
+    .cp-remind .rm-chip.on { color: #1f8a4c; border-color: #cfe9d6; background: #f3fbf6; }
+    .cp-remind .rm-labels { display: flex; gap: 8px; margin-top: 10px; }
+    .cp-remind .rm-nag { font-size: 11.5px; font-weight: 600; color: #b2540a; margin-top: 9px; }
+    .capsule.sm { padding: 5px 13px; font-size: 12px; }
+
+    .cp-srcrow { display: flex; gap: 12px; }
+    .cp-srcrow .src-cell { flex: 1; display: flex; flex-direction: column; gap: 2px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 9px 14px; }
+    .cp-srcrow .src-l { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-dim); }
+    .cp-srcrow .src-v { font-size: 13.5px; font-weight: 600; color: var(--text); }
+
+    .cp-recorded-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+    .cp-rec-head { padding: 13px 16px; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--border-soft); }
+    .cp-recorded { padding: 14px 16px; display: flex; flex-direction: column; gap: 11px; }
+    .cp-recorded .rec-line { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--text-muted); line-height: 1.45; animation: fadeUp .35s ease both; }
+    .cp-recorded .rec-line svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: #1f8a4c; }
+    .cp-recorded .rec-line b { color: var(--text); font-weight: 700; }
+    .cp-recorded .rec-empty { font-size: 13px; color: var(--text-dim); }
 
     .cp-pad { background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; padding: 9px 22px 11px; }
     .cp-pad-head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
@@ -774,15 +835,7 @@
     .cp-pad-ta { width: 100%; height: 48px; background: #fafbfc; border: 1px solid var(--border); border-radius: 10px; outline: none; resize: none; color: var(--text); font-family: inherit; font-size: 13px; line-height: 1.5; padding: 8px 12px; }
     .cp-pad-ta:focus { border-color: var(--blue); background: #fff; }
     .cp-pad-ta::placeholder { color: var(--text-dim); }
-
-    /* Active point flows down; current "say this next" text animates in */
-    .pt-row.now { border-color: var(--blue); background: var(--blue-soft); }
-    .pt-row.now .pt-ck { background: var(--blue); color: #fff; }
-    .pt-row { transition: background .3s, border-color .3s; }
-    .pn-text { animation: flowIn .45s ease both; }
-    @keyframes flowIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-    .pn-live { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); margin-right: 6px; animation: pulse 1s ease-in-out infinite; vertical-align: middle; }
-    @media (max-width: 900px) { .cp-body3 { grid-template-columns: 1fr; } .cp-points { border-left: none; border-top: 1px solid var(--border); } }
+    @media (max-width: 900px) { .cp-body2 { grid-template-columns: 1fr; } .cp-left { border-right: none; border-bottom: 1px solid var(--border); } }
 
     /* FSE panel partitions */
     .fse-panel {
@@ -999,7 +1052,9 @@
       color: var(--blue); background: var(--blue-soft);
       padding: 5px 10px; border-radius: 7px;
       text-decoration: none; white-space: nowrap;
+      border: none; cursor: pointer; font-family: inherit;
     }
+    .cp-flow-title { font-size: 12px; font-weight: 700; color: var(--text); text-align: center; margin-bottom: 12px; }
     .start-assess:hover { background: #dbe7fd; }
     .start-assess svg { width: 11px; height: 11px; }
     .fse-assess { padding: 12px 14px; }
@@ -1115,6 +1170,248 @@
       font-size: 12px; line-height: 1.5; color: #5e6f9e;
     }
     .call-ai svg { width: 13px; height: 13px; color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+
+    /* ---------------- Campaign routing: Sales + FSE additions ---------------- */
+    /* Sales card sub-line (campaign) — keeps the card to name + number + campaign */
+    .sales-campaign { padding: 0 14px 12px; font-size: 11.5px; color: var(--text-muted); font-weight: 600; }
+
+    /* Generic section count pill (used in the FSE panel headers) */
+    .fse-section-head .sec-count {
+      font-size: 11px; font-weight: 600;
+      color: var(--blue); background: var(--blue-soft);
+      padding: 2px 8px; border-radius: 20px; margin-left: 6px;
+    }
+
+    /* FSE collapsed card: always-visible phone + booked-time meta, then campaign */
+    .fse-meta {
+      display: flex; flex-wrap: wrap; gap: 8px 16px;
+      padding: 10px 14px 6px; font-size: 12.5px; color: var(--text);
+    }
+    .fse-meta .fm-item { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .fse-meta .fm-item svg { width: 13px; height: 13px; stroke-width: 1.9; color: var(--text-muted); flex-shrink: 0; }
+    .fse-meta-campaign { padding: 0 14px 12px; font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
+
+    /* Profile label + call-done chips on the FSE card head */
+    .fse-label-chip {
+      margin-left: 8px; background: #efe9fc; color: #6b3fc4;
+      font-weight: 700; font-size: 10.5px; padding: 3px 9px; border-radius: 20px;
+    }
+    .fse-done-chip {
+      margin-left: 6px; background: #e6f6ec; color: #1f8a4c;
+      font-weight: 700; font-size: 10.5px; padding: 3px 9px; border-radius: 20px;
+    }
+    .lc-head .fse-label-chip + .type-capsule,
+    .lc-head .fse-done-chip + .type-capsule { margin-left: 8px; }
+
+    /* FSE leads panel — lay cards out in columns so the 2nd card sits on the right */
+    .fse-leads .fse-section-body {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+    .fse-leads .fse-section-body .lead-card { max-width: none; margin-bottom: 0; }
+    .fse-leads .fse-section-body .fse-hint { grid-column: 1 / -1; }
+
+    /* Offline-trial conversion note */
+    .fse-conv-note {
+      display: flex; gap: 9px; align-items: flex-start;
+      margin: 12px 14px 0; padding: 11px 13px;
+      background: #fff8ec; border: 1px solid #f0d9a8; border-radius: 10px;
+      font-size: 12px; line-height: 1.5; color: #8a5a16;
+    }
+    .fse-conv-note svg { width: 15px; height: 15px; stroke-width: 1.9; flex-shrink: 0; margin-top: 1px; }
+    .fse-conv-note b { color: #7a4d12; font-weight: 700; }
+
+    /* Start-call footer inside the expanded FSE card */
+    .fse-call-foot { padding: 14px; }
+    .fse-call-foot .btn-primary { display: flex; align-items: center; justify-content: center; }
+    .fse-call-foot .play-ic { width: 14px; height: 14px; margin-right: 7px; }
+
+    /* ---------------- FSE call screen (uses .cockpit shell, no AI) ---------------- */
+    .fse-call-body { flex: 1; overflow-y: auto; padding: 26px 24px 40px; }
+    .fse-call-inner { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .fse-call-h { font-size: 21px; font-weight: 800; }
+    .fse-call-sub { font-size: 13px; color: var(--text-muted); margin-top: -10px; }
+
+    .fse-ppt-btn {
+      display: flex; align-items: center; gap: 14px;
+      text-align: left; cursor: pointer; font-family: inherit;
+      border: 1px solid var(--blue-divider); border-left: 4px solid var(--blue);
+      background: linear-gradient(180deg, #f7faff, #eef4ff);
+      border-radius: 14px; padding: 16px 18px;
+    }
+    .fse-ppt-btn:hover { box-shadow: 0 0 0 3px rgba(47,107,246,.10); }
+    .fse-ppt-btn .ppt-ic {
+      width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
+      background: var(--blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fse-ppt-btn .ppt-ic svg { width: 22px; height: 22px; }
+    .fse-ppt-btn .ppt-txt { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+    .fse-ppt-btn .ppt-txt b { font-size: 15px; font-weight: 800; color: var(--text); }
+    .fse-ppt-btn .ppt-txt span { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; }
+    .fse-ppt-btn .ppt-go { font-size: 13px; font-weight: 700; color: var(--blue); white-space: nowrap; }
+
+    .fse-info-card { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); overflow: hidden; }
+    .fse-info-card .fci-head { padding: 11px 14px; font-size: 12.5px; font-weight: 700; border-bottom: 1px solid var(--border-soft); }
+    .fse-info-card .fse-conv-note { margin: 12px 14px 14px; }
+
+    .fse-field { display: flex; flex-direction: column; gap: 9px; }
+    .fse-notes-ta {
+      width: 100%; min-height: 120px; resize: vertical;
+      border: 1px solid var(--border); border-radius: 11px;
+      background: #fafbfc; padding: 12px 14px; font-size: 13.5px; line-height: 1.55;
+      font-family: inherit; color: var(--text); outline: none;
+    }
+    .fse-notes-ta:focus { border-color: var(--blue); background: #fff; }
+
+    /* ---------------- Write PPT briefing deck (modal) ---------------- */
+    .modal.ppt-modal { max-width: 660px; }
+    .ppt-modal .modal-head .ppt-auto {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--blue); background: var(--blue-soft); padding: 2px 8px; border-radius: 20px; margin-left: 8px;
+    }
+    .ppt-body { padding: 0; }
+    .ppt-slide {
+      min-height: 320px; padding: 30px 34px;
+      display: flex; flex-direction: column; gap: 12px;
+      background: linear-gradient(180deg, #fbfcff, #f3f7ff);
+    }
+    .ppt-num { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-dim); }
+    .ppt-title { font-size: 22px; font-weight: 800; color: var(--text); }
+    .ppt-big { font-size: 28px; font-weight: 800; color: var(--blue); margin-top: 2px; }
+    .ppt-lines { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .ppt-lines li { position: relative; padding-left: 20px; font-size: 14.5px; line-height: 1.5; color: var(--text); }
+    .ppt-lines li::before { content: ''; position: absolute; left: 2px; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+    .ppt-lines li b { font-weight: 800; }
+    .ppt-foot { justify-content: space-between; align-items: center; }
+    .ppt-dots { display: flex; gap: 7px; }
+    .ppt-dot { width: 9px; height: 9px; border-radius: 50%; background: #d7dbe2; cursor: pointer; }
+    .ppt-dot.on { background: var(--blue); }
+    .ppt-nav { display: flex; gap: 10px; }
+    .ppt-nav .btn-primary, .ppt-nav .btn-ghost { width: auto; padding: 9px 18px; }
+
+    /* ── Sales Performance tab ── */
+    .perf-wrap {
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 16px; align-content: start;
+    }
+    .perf-filters {
+      display: flex; align-items: center; gap: 11px; flex-wrap: wrap;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 11px 14px;
+    }
+    .perf-filters .pf-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--text-muted);
+    }
+    .perf-filters .pf-spacer { flex: 1; }
+    .perf-seg { display: inline-flex; background: #f1f3f7; border-radius: 9px; padding: 3px; gap: 3px; }
+    .perf-seg button {
+      border: none; background: transparent; padding: 7px 16px; border-radius: 6px;
+      font-size: 12.5px; font-weight: 600; color: var(--text-muted); cursor: pointer;
+      transition: background .12s, color .12s;
+    }
+    .perf-seg button:hover { color: var(--text); }
+    .perf-seg button.active { background: #fff; color: var(--text); box-shadow: var(--shadow); }
+    .perf-person {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      border: 1px solid var(--border); border-radius: 9px;
+      padding: 8px 32px 8px 12px; cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a90a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center;
+    }
+    .perf-person:hover { border-color: var(--blue); }
+
+    .perf-hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+    @media (max-width: 1080px) { .perf-hero { grid-template-columns: 1fr; } }
+
+    .perf-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .perf-card-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 13px 16px; font-size: 13.5px; font-weight: 700; color: var(--text);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .perf-card-head svg { width: 15px; height: 15px; color: var(--blue); stroke-width: 1.8; }
+    .perf-card-head .pc-sub { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+    /* Funnel */
+    .perf-funnel { padding: 16px; display: flex; flex-direction: column; gap: 11px; }
+    .funnel-row { display: flex; align-items: center; gap: 12px; }
+    .funnel-label { width: 74px; font-size: 12.5px; font-weight: 600; color: var(--text-muted); flex-shrink: 0; }
+    .funnel-track { flex: 1; height: 26px; background: #f1f3f7; border-radius: 7px; overflow: hidden; }
+    .funnel-fill { height: 100%; border-radius: 7px; background: linear-gradient(90deg, #6f9bf9, #2f6bf6); transition: width .25s ease; }
+    .funnel-fill.conv { background: linear-gradient(90deg, #34b36a, #1f8a4c); }
+    .funnel-count { width: 36px; text-align: right; font-size: 15px; font-weight: 800; color: var(--text); flex-shrink: 0; }
+    .funnel-foot { margin-top: 5px; font-size: 12px; color: var(--text-muted); }
+    .funnel-foot b { color: var(--blue); font-weight: 700; }
+
+    /* Money rail */
+    .perf-money { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .money-tile { border-radius: 10px; padding: 11px 14px; display: flex; flex-direction: column; gap: 1px; }
+    .money-tile .mt-label { font-size: 11.5px; font-weight: 700; }
+    .money-tile .mt-val { font-size: 22px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
+    .money-tile .mt-sub { font-size: 10.5px; font-weight: 600; opacity: .82; }
+    .money-tile.cap  { background: #e6f6ec; color: #1f7a45; }
+    .money-tile.miss { background: #fdeaea; color: #c0392b; }
+    .money-tile.pot  { background: var(--blue-soft); color: var(--blue); }
+    .perf-chips { display: flex; gap: 10px; }
+    .perf-chip {
+      flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .perf-chip .ch-val { font-size: 17px; font-weight: 800; color: var(--text); }
+    .perf-chip .ch-label { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
+
+    /* Owner tag (shown only when viewing all salespeople) */
+    .owner-tag {
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      background: #f1f3f7; padding: 1px 7px; border-radius: 20px; margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* Generic list rows */
+    .perf-list { padding: 4px 14px 12px; display: flex; flex-direction: column; }
+
+    /* Open prospects */
+    .prospect-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 2px; border-top: 1px solid var(--border-soft); }
+    .prospect-row:first-child { border-top: none; }
+    .prospect-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+    .prospect-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .prospect-ai { font-size: 12px; line-height: 1.5; color: #5e6f9e; display: flex; gap: 7px; }
+    .prospect-ai svg { width: 13px; height: 13px; color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+    .prospect-side { text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+    .prospect-amt { font-size: 14px; font-weight: 800; color: var(--text); }
+    .likeli { font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: .03em; }
+    .likeli.high { background: #e6f6ec; color: #1f8a4c; }
+    .likeli.medium { background: #fdf2e0; color: #b25e09; }
+    .likeli.low { background: #fdeaea; color: #c0392b; }
+
+    /* Misses (grouped) */
+    .miss-group { padding: 13px 16px; border-top: 1px solid var(--border-soft); }
+    .miss-group:first-child { border-top: none; }
+    .miss-gh { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
+    .miss-gh .mg-title { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .miss-gh .mg-count { font-size: 11px; font-weight: 700; color: #b25e09; background: #fdf2e0; padding: 1px 9px; border-radius: 20px; }
+    .miss-item { display: flex; gap: 9px; padding: 6px 0; font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
+    .miss-item b { color: var(--text); font-weight: 700; }
+    .miss-item .mi-dot { width: 6px; height: 6px; border-radius: 50%; background: #e8920a; margin-top: 6px; flex-shrink: 0; }
+
+    /* Losses */
+    .loss-row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-top: 1px solid var(--border-soft); }
+    .loss-row:first-child { border-top: none; }
+    .loss-main { flex: 1; min-width: 0; }
+    .loss-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .loss-note { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.45; }
+    .reason-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 3px 9px; border-radius: 20px; flex-shrink: 0; white-space: nowrap; }
+    .reason-tag.competitor { background: #efe9fc; color: #6b3fc4; }
+    .reason-tag.pricing    { background: #fdf2e0; color: #b25e09; }
+    .reason-tag.delay      { background: #fdeaea; color: #c0392b; }
+    .loss-amt { font-size: 14px; font-weight: 800; color: #c0392b; width: 72px; text-align: right; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -1146,7 +1443,7 @@
         <a href="#" data-page="CRM"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>CRM</a>
         <a href="#" data-page="Call Analysis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Call Analysis</a>
         <a href="#" data-page="Universal OTP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Universal OTP</a>
-        <a href="#" class="active" data-page="Leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg>Leads</a>
+        <a href="#" class="active" data-page="Sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg>Sales</a>
         <a href="#" data-page="FSE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>FSE</a>
       </nav>
     </aside>
@@ -1251,47 +1548,88 @@
         </div>`;
     }
 
-    // Initial lead info captured at booking. Phone is the key field that creates the lead
-    // in the backend; the rest is mock data. `ai` is what the AI captures from the sales
-    // call recording — revealed at the Review step in this mock.
+    // Every lead carries its campaign origin and the section it lands in (`pool`).
+    // Routing is decided on the website, BEFORE the lead reaches this panel:
+    //   outside-blr                         → books an FSE slot on site            → FSE  (fseType 'outside')
+    //   inside-blr + address + offline ₹99  → offline trial booked; FSE conversion
+    //                                          call scheduled at end of session     → FSE  (fseType 'offline-trial')
+    //   inside-blr + online trial + slot    → books an FSE slot on site            → FSE  (fseType 'online-trial')
+    //   inside-blr + phone only (no address)→ needs a sales call                   → Sales (pool 'sales')
+    // Sales leads keep `capture`/`assess`/`ai` because the AI sales cockpit reads them.
     const LEADS = [
-      { name: 'Ananya Sharma', phone: '+91 98765 43210', source: 'Meta Ads',   bookedVia: 'Landing Page', campaign: 'CMP-2041', booking: 'BKG-88231', followUp: true,
+      // ---------- SALES pool — inside Bangalore, phone only (no address) ----------
+      { pool: 'sales', name: 'Ananya Sharma', phone: '+91 98765 43210', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88231',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', address: null, followUp: true,
         followUpInfo: { count: 1, reason: 'Wanted trainer credentials before committing — re-engage with proof points & a slot.', assignee: 'Priya Nair · Sales' },
-        capture: { bookingFor: 'Self', ageGender: '34 · Female', location: 'Bengaluru — HSR Layout', contactTime: 'Weekday evenings' },
+        capture: { bookingFor: 'Self', ageGender: '34 · Female', location: 'Bengaluru (area not shared)', contactTime: 'Weekday evenings' },
         assess: { painPoints: [{ t: 'Right-knee pain', s: 4 }, { t: 'Stiffness after sitting', s: 3 }], goals: ['Pain-free mobility', 'Return to jogging'], intentStars: 4 },
         ai: { decision: 'qualified', subs: ['High Intent', 'Ready for FSE Trial'], physio: 'Dr. Rohan Gupta', mode: 'online', trial: null,
               conversion: { level: 'High', pct: 82 }, langGap: false, minInfo: true,
               intentSummary: 'Knee pain, booking for self (34F). Comfortable with online sessions, high intent to start a trial this week.',
               trialBooking: 'Online trial requested — wants a slot this week.' } },
-      { name: 'Vikram Rao',    phone: '+91 99820 11234', source: 'Google Ads', bookedVia: 'Website Form',  campaign: 'CMP-2039', booking: 'BKG-88240', followUp: true,
-        followUpInfo: { count: 2, reason: 'Price-sensitive; father’s offline trial slot still unconfirmed — confirm plan & slot.', assignee: 'Aarav Mehta · Sales' },
-        capture: { bookingFor: 'Parent (father)', ageGender: '62 · Male', location: 'Bengaluru — Indiranagar', contactTime: 'Weekday mornings' },
-        assess: { painPoints: [{ t: 'Lower-back pain (father)', s: 4 }, { t: 'Reduced balance', s: 3 }], goals: ['Daily mobility', 'Fall prevention'], intentStars: 3 },
-        ai: { decision: 'qualified', subs: ['Eligible & Interested', 'Follow-up Scheduled'], physio: 'Dr. Sneha Iyer', mode: 'offline', trial: 'offline',
-              conversion: { level: 'Medium', pct: 58 }, langGap: false, minInfo: true,
-              intentSummary: 'Enquiring for father (62). Prefers an offline trial near Indiranagar. Family supportive, moderately price-sensitive.',
-              trialBooking: 'Offline trial at the centre — needs a weekday evening slot.' } },
-      { name: 'Rahul Verma',   phone: '+91 98111 55678', source: 'Referral',   bookedVia: 'Phone Enquiry', campaign: 'CMP-2044', booking: 'BKG-88255', followUp: false,
-        capture: { bookingFor: 'Self', ageGender: '29 · Male', location: 'Pune — Kharadi', contactTime: 'Afternoons' },
-        assess: { painPoints: [{ t: 'Lower-back pain (desk job)', s: 3 }], goals: ['Posture correction', 'Core strength'], intentStars: 4 },
-        ai: { decision: 'qualified', subs: ['High Intent'], physio: 'Dr. Rohan Gupta', mode: 'online', trial: null,
-              conversion: { level: 'High', pct: 76 }, langGap: false, minInfo: true,
-              intentSummary: 'Lower-back pain, desk job (29M). Booking for self, online preferred. Ready to begin.',
-              trialBooking: 'Online trial — flexible on timing.' } },
-      { name: 'Sara Khan',     phone: '+91 90042 33890', source: 'Instagram',  bookedVia: 'WhatsApp',      campaign: 'CMP-2045', booking: 'BKG-88261', followUp: false,
-        capture: { bookingFor: 'Self', ageGender: '41 · Female', location: 'Hyderabad — Gachibowli', contactTime: 'Late evenings' },
+      { pool: 'sales', name: 'Sara Khan', phone: '+91 90042 33890', source: 'Instagram', bookedVia: 'WhatsApp', campaign: 'CMP-2045', booking: 'BKG-88261',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Instagram — Diabetes Care', address: null, followUp: false,
+        capture: { bookingFor: 'Self', ageGender: '41 · Female', location: 'Bengaluru (area not shared)', contactTime: 'Late evenings' },
         assess: { painPoints: [{ t: 'Low energy / fatigue', s: 3 }, { t: 'Weight management', s: 3 }], goals: ['Diabetes management', 'Sustainable weight loss'], intentStars: 3 },
         ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Sneha Iyer', mode: 'offline', trial: 'online',
               conversion: { level: 'Medium', pct: 50 }, langGap: true, minInfo: true,
               intentSummary: 'Diabetes-management goal (41F). Strong regional-language preference — the sales rep could not communicate fully (language gap).',
               trialBooking: 'Online trial — awaiting slot confirmation.' } },
-      { name: 'Aditya Nair',   phone: '+91 97401 77654', source: 'Meta Ads',   bookedVia: 'Landing Page',  campaign: 'CMP-2041', booking: 'BKG-88270', followUp: false,
+      { pool: 'sales', name: 'Aditya Nair', phone: '+91 97401 77654', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88270',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', address: null, followUp: false,
         capture: { bookingFor: 'Self', ageGender: '—', location: '—', contactTime: '—' },
         assess: { painPoints: [], goals: [], intentStars: 1 },
         ai: { decision: 'disqualified', subs: ['Not Interested', 'Out of Budget'], physio: null, mode: null, trial: null,
               conversion: { level: 'Low', pct: 21 }, langGap: false, minInfo: false,
               intentSummary: 'Call cut short — minimum info not gathered. Low urgency and seemed beyond budget.',
-              trialBooking: '—' } }
+              trialBooking: '—' } },
+
+      // ---------- FSE pool — Outside Bangalore (booked an FSE slot on the website) ----------
+      { pool: 'fse', fseType: 'outside', name: 'Rahul Verma', phone: '+91 98111 55678', source: 'Google Ads', campaign: 'CMP-2044', booking: 'BKG-88255',
+        campaignType: 'outside-blr', campaignName: 'Outside BLR · Google — Back Pain', address: 'Pune — Kharadi',
+        bookedTime: 'Tomorrow · 11:00 AM', physio: 'Dr. Rohan Gupta',
+        capture: { bookingFor: 'Self', ageGender: '29 · Male', location: 'Pune — Kharadi', contactTime: 'Afternoons' },
+        assess: { painPoints: [{ t: 'Lower-back pain (desk job)', s: 3 }], goals: ['Posture correction', 'Core strength'], intentStars: 4 } },
+      { pool: 'fse', fseType: 'outside', name: 'Meera Joshi', phone: '+91 90040 88123', source: 'Instagram', campaign: 'CMP-2052', booking: 'BKG-88288',
+        campaignType: 'outside-blr', campaignName: 'Outside BLR · Instagram — Post-Pregnancy', address: 'Hyderabad — Gachibowli',
+        bookedTime: 'Today · 6:00 PM', physio: 'Dr. Divya Menon',
+        capture: { bookingFor: 'Self', ageGender: '33 · Female', location: 'Hyderabad — Gachibowli', contactTime: 'Mornings' },
+        assess: { painPoints: [{ t: 'Core weakness', s: 3 }, { t: 'Lower-back ache', s: 2 }], goals: ['Post-pregnancy strength', 'Energy & stamina'], intentStars: 4 } },
+
+      // ---------- FSE pool — Inside Bangalore · Online Trial (picked a slot on the website) ----------
+      { pool: 'fse', fseType: 'online-trial', name: 'Karthik Reddy', phone: '+91 97411 23390', source: 'Google Ads', campaign: 'CMP-2039', booking: 'BKG-88291',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Google — Senior Care', address: 'Bengaluru — Whitefield',
+        bookedTime: 'Tomorrow · 3:00 PM', physio: 'Dr. Rohan Gupta',
+        capture: { bookingFor: 'Parent (mother)', ageGender: '64 · Female', location: 'Bengaluru — Whitefield', contactTime: 'Weekday afternoons' },
+        assess: { painPoints: [{ t: 'Knee osteoarthritis (mother)', s: 4 }, { t: 'Reduced balance', s: 3 }], goals: ['Pain-free walking', 'Fall prevention'], intentStars: 4 } },
+      { pool: 'fse', fseType: 'online-trial', name: 'Neha Kulkarni', phone: '+91 99860 77234', source: 'Meta Ads', campaign: 'CMP-2041', booking: 'BKG-88295',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — PCOS Fitness', address: 'Bengaluru — Koramangala',
+        bookedTime: 'Today · 7:30 PM', physio: 'Dr. Sneha Iyer',
+        capture: { bookingFor: 'Self', ageGender: '28 · Female', location: 'Bengaluru — Koramangala', contactTime: 'Evenings' },
+        assess: { painPoints: [{ t: 'Low energy', s: 3 }, { t: 'Weight management', s: 3 }], goals: ['PCOS fitness', 'Sustainable weight loss'], intentStars: 3 } },
+
+      // ---------- FSE pool — Inside Bangalore · Offline Trial (₹99, address given) ----------
+      // Sales call skipped. FSE conversion call scheduled at the end of the offline trial session.
+      { pool: 'fse', fseType: 'offline-trial', name: 'Vikram Rao', phone: '+91 99820 11234', source: 'Google Ads', campaign: 'CMP-2039', booking: 'BKG-88240',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Google — Senior Care', address: 'Bengaluru — Indiranagar',
+        bookedTime: 'Sat · 10:00 AM', trialSession: 'Sat · 10:00 AM · Indiranagar centre', conversionCall: 'right after the trial session', physio: 'Dr. Sneha Iyer',
+        capture: { bookingFor: 'Parent (father)', ageGender: '62 · Male', location: 'Bengaluru — Indiranagar', contactTime: 'Weekday mornings' },
+        assess: { painPoints: [{ t: 'Lower-back pain (father)', s: 4 }, { t: 'Reduced balance', s: 3 }], goals: ['Daily mobility', 'Fall prevention'], intentStars: 3 } },
+      { pool: 'fse', fseType: 'offline-trial', name: 'Rohan Shetty', phone: '+91 98455 61209', source: 'Meta Ads', campaign: 'CMP-2041', booking: 'BKG-88298',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', address: 'Bengaluru — HSR Layout',
+        bookedTime: 'Sun · 12:00 PM', trialSession: 'Sun · 12:00 PM · HSR centre', conversionCall: 'right after the trial session', physio: 'Dr. Karan Bhatia',
+        capture: { bookingFor: 'Self', ageGender: '47 · Male', location: 'Bengaluru — HSR Layout', contactTime: 'Weekend mornings' },
+        assess: { painPoints: [{ t: 'Right-knee pain', s: 4 }, { t: 'Morning stiffness', s: 3 }], goals: ['Pain-free mobility', 'Strength'], intentStars: 4 } }
+    ];
+
+    // Extra fresh leads that surface on the Alerts screen's "Today's New Leads".
+    const EXTRA_NEW = [
+      { name: 'Priya Desai',   source: 'Meta Ads',   phone: '+91 98201 44521' },
+      { name: 'Karthik Reddy', source: 'Google Ads', phone: '+91 97411 23390' },
+      { name: 'Meera Joshi',   source: 'Instagram',  phone: '+91 90040 88123' },
+      { name: 'Arjun Patel',   source: 'Referral',   phone: '+91 98330 55012' },
+      { name: 'Neha Kulkarni', source: 'WhatsApp',   phone: '+91 99860 77234' },
+      { name: 'Rohan Shetty',  source: 'Meta Ads',   phone: '+91 98455 61209' }
     ];
 
     const PHYSIOS = ['Dr. Rohan Gupta', 'Dr. Sneha Iyer', 'Dr. Karan Bhatia', 'Dr. Divya Menon'];
@@ -1503,18 +1841,17 @@
           ${withBadge ? followBadge(d) : ''}
           ${statusPill(st, !withBadge)}
         </div>`;
+      // Sales cards intentionally show name + number only — everything else is
+      // gathered by the AI on the call. Campaign is shown as a small sub-line.
       const info = `
         <div class="pgrid">
-          ${dcell('Phone Number', d.phone)}
-          ${dcell('Lead Source', d.source)}
-          ${dcell('Booked Via', d.bookedVia)}
-          ${dcell('Campaign ID', d.campaign)}
-          ${dcell('Booking ID', d.booking, true)}
-        </div>`;
+          ${dcell('Phone Number', d.phone, true)}
+        </div>
+        <div class="sales-campaign">${d.campaignName}</div>`;
 
       let body = '', footer = '';
       if (st.stage === 'new') {
-        body = `<div class="card-hint pad">Lead created from the booking. Start the sales call to begin — the AI listens during the call and fills the rest.</div>`;
+        body = `<div class="card-hint pad">Phone-only lead (no address given). Start the sales call — the AI listens and captures the rest.</div>`;
         footer = `<div class="lc-foot"><button type="button" class="btn-primary" data-act="start-call">Start Sales Call</button></div>`;
       } else if (st.stage === 'calling') {
         const ready = st.label && st.intent;
@@ -1568,12 +1905,13 @@
     }
 
     function leadsTab() {
-      const fu = LEADS.filter(d => d.followUp);
+      const sales = LEADS.filter(d => d.pool === 'sales');
+      const fu = sales.filter(d => d.followUp);
       return `
         <div class="lead-tab">
           <div class="ai-legend">
             <span class="swatch"></span>
-            <span><b>Blue</b> represents AI-assisted info</span>
+            <span>Phone-only leads from <b>inside-Bangalore</b> campaigns (no address). Start the AI sales call to qualify &amp; book a trial.</span>
           </div>
           <div class="leads-scroll">
             <section class="leads-section">
@@ -1581,55 +1919,74 @@
               <div class="cards-2col">${fu.map(d => leadCard(d, true)).join('')}</div>
             </section>
             <section class="leads-section">
-              <div class="leads-section-head">All Leads <span class="sec-count">${LEADS.length}</span></div>
-              <div class="cards-2col">${LEADS.map(d => leadCard(d, false)).join('')}</div>
+              <div class="leads-section-head">Leads <span class="sec-count">${sales.length}</span></div>
+              <div class="cards-2col">${sales.map(d => leadCard(d, false)).join('')}</div>
             </section>
           </div>
         </div>`;
     }
 
-    // FSE card — the full captured lead, shown in the FSE panel once moved.
-    function fseCard(d) {
+    // Normalised view for an FSE card — works for direct-arrival FSE leads and
+    // for Sales leads the rep later moved to FSE after the AI call.
+    function fseView(d) {
       const st = ls(d.booking);
-      const typeText = st.mode === 'online' ? 'Online' : 'Offline · ' + (st.trial === 'online' ? 'Online Trial' : 'Offline Trial');
+      let fseType, bookedTime, physio, address, trialSession, conversionCall;
+      if (d.pool === 'fse') {
+        fseType = d.fseType; bookedTime = d.bookedTime; physio = d.physio; address = d.address;
+        trialSession = d.trialSession; conversionCall = d.conversionCall;
+      } else { // moved from Sales
+        fseType = st.mode === 'online' ? 'online-trial' : (st.trial === 'offline' ? 'offline-trial' : 'online-trial');
+        bookedTime = ((st.date || '') + ' ' + (st.slot || '')).trim() || '—';
+        physio = st.physio; address = d.capture.location;
+      }
+      return { d, st, fseType, bookedTime, physio, address, trialSession, conversionCall,
+        name: d.name, phone: d.phone, campaignName: d.campaignName || d.campaign, profile: d.capture, assess: d.assess };
+    }
+
+    const FSE_TYPE_LABEL = { 'outside': 'Outside BLR', 'online-trial': 'Online Trial', 'offline-trial': 'Offline Trial' };
+
+    // FSE card — collapsed shows name · phone · campaign · time booked.
+    // Expands to the full client info + Start Call. No AI on the FSE side.
+    function fseCard(v) {
+      const d = v.d, st = v.st;
+      const offline = v.fseType === 'offline-trial';
+      const time = offline ? (v.trialSession || v.bookedTime) : v.bookedTime;
+      const timeLabel = offline ? 'Offline trial' : 'FSE call';
+      const pp = v.assess.painPoints.map(p => `${p.t} (${p.s}/5)`).join(', ') || '—';
+      const goals = v.assess.goals.join(', ') || '—';
+      const labelChip = st.fseLabel ? `<span class="fse-label-chip">${st.fseLabel}</span>` : '';
+      const doneChip = st.fseCallDone ? `<span class="fse-done-chip">Call done ✓</span>` : '';
+      const startTxt = st.fseCallDone ? 'Reopen Call' : (offline ? 'Start Conversion Call' : 'Start FSE Call');
       return `
-        <div class="lead-card fse-card">
+        <div class="lead-card fse-card ${st.fseCallDone ? 'calldone' : ''}" data-id="${d.booking}">
           <div class="lc-head">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PERSON}</svg>
-            <span class="lc-title">${d.name}</span>
-            <span class="type-capsule">${typeText}</span>
+            <span class="lc-title">${v.name}</span>
+            ${labelChip}${doneChip}
+            <span class="type-capsule">${FSE_TYPE_LABEL[v.fseType]}</span>
             <svg class="lc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="fse-sched">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/></svg>
-            <span class="sched-label">FSE Slot · ${st.physio || 'Physio'}</span>
-            <span class="sched-val">${(st.date || '') + ' ' + (st.slot || '—')}</span>
+          <div class="fse-meta">
+            <span class="fm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PHONE_CALL}</svg>${v.phone}</span>
+            <span class="fm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CLOCK2}</svg>${timeLabel} · ${time}</span>
           </div>
-          <div class="fse-assess">${startAssess(assessDoc(st))}</div>
+          <div class="fse-meta-campaign">${v.campaignName}</div>
           <div class="fse-card-body">
             <div class="pgrid">
-              ${dcell('Name', d.name)}
-              ${dcell('Phone Number', d.phone)}
-              ${dcell('Lead Source', d.source)}
-              ${dcell('Booked Via', d.bookedVia)}
-              ${dcell('Campaign ID', d.campaign)}
+              ${dcell('Booking For', v.profile.bookingFor)}
+              ${dcell('Age & Gender', v.profile.ageGender)}
+              ${dcell('Location / Address', v.address || v.profile.location, true)}
+              ${dcell('Pain Points', pp, true)}
+              ${dcell('Goals', goals, true)}
+              ${dcell('Assigned Physio', v.physio || '—')}
+              ${dcell('Best Time', v.profile.contactTime)}
               ${dcell('Booking ID', d.booking, true)}
             </div>
-            <div class="pgrid">
-              ${dcell('Call Type Label', st.label || '—')}
-              ${dcell('Customer Intent', (st.intent || 0) + '/5')}
-              ${dcell('Mode of Service', typeText)}
-              ${dcell('Assigned Physio', st.physio || '—')}
-              ${dcell('Qualification', st.subs.join(', ') || '—', true)}
-            </div>
-            <div class="ai-summary">
-              <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>AI Summary of Client · First Call</div>
-              <div class="ai-summary-body">${d.ai.intentSummary}</div>
-              ${conversionBlock(d.ai.conversion)}
-            </div>
-            <div class="ai-summary">
-              <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>Trial Booking</div>
-              <div class="ai-summary-body">${d.ai.trialBooking}</div>
+            ${offline ? `<div class="fse-conv-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CLOCK2}</svg><span>Offline ₹99 trial booked — sales call skipped. <b>FSE conversion call</b> scheduled ${v.conversionCall || 'at the end of the session'} (offline trial → offline subscription).</span></div>` : ''}
+            <div class="fse-call-foot">
+              <button type="button" class="btn-primary" data-fsecall="${d.booking}">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="play-ic"><path d="M6 4l14 8-14 8z"/></svg>${startTxt}
+              </button>
             </div>
           </div>
         </div>`;
@@ -1637,44 +1994,21 @@
 
     const fseHint = () => `<div class="fse-hint">No leads here yet</div>`;
 
-    // Assessment docs per FSE section type.
-    const ASSESS_DOCS = {
-      online:       'https://docs.google.com/document/d/1TeBgQNwzpyCAjk00chczFi7L7uQs6eJcoF9kaEZwD0E/edit?tab=t.0',
-      onlineTrial:  'https://docs.google.com/document/d/1jXyg72WnAGvLKrLoEcf1BxAlMPeIRMQ87qX4xsT4Ivc/edit?tab=t.0',
-      offlineTrial: 'https://docs.google.com/document/d/1XNATDHqLOzV0vkmuMD7wvRZ1zqETrevh7mRHdhJRxaA/edit?tab=t.0'
-    };
-    const startAssess = (href) =>
-      `<a class="start-assess" href="${href}" target="_blank" rel="noopener">` +
-      `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg>Start Assessment</a>`;
-
-    // The assessment doc that matches this lead's mode / trial type.
-    function assessDoc(st) {
-      if (st.mode === 'offline') return st.trial === 'online' ? ASSESS_DOCS.onlineTrial : ASSESS_DOCS.offlineTrial;
-      return ASSESS_DOCS.online;
-    }
-
+    // FSE panel — grouped by how the lead arrived from its campaign.
     function fseTab() {
-      const done = LEADS.filter(d => ls(d.booking).outcome === 'fse');
-      const inSec = (fn) => { const a = done.filter(fn); return a.length ? a.map(fseCard).join('') : fseHint(); };
+      const leads = LEADS.filter(d => d.pool === 'fse' || ls(d.booking).outcome === 'fse').map(fseView);
+      const sec = (type) => { const a = leads.filter(v => v.fseType === type); return a.length ? a.map(fseCard).join('') : fseHint(); };
+      const count = (type) => leads.filter(v => v.fseType === type).length;
+      const block = (title, type) => `
+        <section class="fse-section">
+          <div class="fse-section-head"><span>${title} <span class="sec-count">${count(type)}</span></span></div>
+          <div class="fse-section-body">${sec(type)}</div>
+        </section>`;
       return `
-        <div class="fse-panel">
-          <section class="fse-section">
-            <div class="fse-section-head">Online</div>
-            <div class="fse-section-body">${inSec(d => ls(d.booking).mode === 'online')}</div>
-          </section>
-          <section class="fse-section">
-            <div class="fse-section-head">Offline</div>
-            <div class="fse-section-body fse-sub-grid">
-              <div class="fse-subsection">
-                <div class="fse-sub-head">Online Trial</div>
-                <div class="fse-sub-body">${inSec(d => { const s = ls(d.booking); return s.mode === 'offline' && s.trial === 'online'; })}</div>
-              </div>
-              <div class="fse-subsection">
-                <div class="fse-sub-head">Offline Trial</div>
-                <div class="fse-sub-body">${inSec(d => { const s = ls(d.booking); return s.mode === 'offline' && s.trial === 'offline'; })}</div>
-              </div>
-            </div>
-          </section>
+        <div class="fse-panel fse-leads">
+          ${block('Outside Bangalore', 'outside')}
+          ${block('Inside Bangalore · Online Trial', 'online-trial')}
+          ${block('Inside Bangalore · Offline Trial', 'offline-trial')}
         </div>`;
     }
 
@@ -1856,15 +2190,60 @@
         </div>`;
       const list = (items, emptyTxt) => items.length ? `<div class="alist">${items.join('')}</div>` : `<div class="aempty">${emptyTxt}</div>`;
 
-      const newLeads = LEADS.filter(d => ls(d.booking).stage === 'new')
-        .map(d => aitem('', ICON_USERPLUS, d.name, `${d.source} · ${d.phone} — not called yet`, 'New'));
+      // Compact, narrow new-lead card — no "New" badge (every card here is new).
+      const nlead = (name, source, phone) => `
+        <div class="nlead">
+          <div class="nl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_USERPLUS}</svg></div>
+          <div class="nl-main"><span class="nl-name">${name}</span><span class="nl-meta">${source} · ${phone}</span></div>
+        </div>`;
+      const nlist = (items) => items.length ? `<div class="nlead-grid">${items.join('')}</div>` : `<div class="aempty">No new leads right now.</div>`;
 
-      const followItems = reminders.map(r =>
-        aitem('warn', ICON_CLOCK2, `${r.name}${r.type === 'manual' ? ' — manual reminder' : ''}`, r.note, r.when));
+      // Alerts are about the Sales pool only — FSE leads don't carry AI fields.
+      const salesLeads = LEADS.filter(d => d.pool === 'sales');
+      const freshLeads = salesLeads.filter(d => ls(d.booking).stage === 'new' && !d.followUp && !d.ai.langGap)
+        .map(d => nlead(d.name, d.source, d.phone));
+      const newLeads = [...freshLeads, ...EXTRA_NEW.map(d => nlead(d.name, d.source, d.phone))];
 
-      const aiItems = LEADS.filter(d => ls(d.booking).outcome === 'ai-call')
-        .map(d => aitem('purple', ICON_SPARK, `${d.name} — language gap flagged`,
-          `AI call scheduled — the AI will call the customer in their language and summarise. Conversion: ${d.ai.conversion.level} ${d.ai.conversion.pct}%.`, 'AI call'));
+      // Pull leads that need a follow-up or were rescheduled (language-gap → AI call).
+      const reschedFollow = salesLeads.filter(d => d.followUp || d.ai.langGap).map(d =>
+        d.ai.langGap
+          ? aitem('purple', ICON_SPARK, `${d.name} — rescheduled for AI call`,
+              `Language gap flagged · ${d.source}. The AI will call back in the customer's language and summarise.`, 'Tomorrow · 11:00 AM')
+          : aitem('warn', ICON_CLOCK2, `${d.name} — follow-up`, d.followUpInfo.reason, 'Tomorrow · 11:00 AM'));
+      const followItems = [...reschedFollow, ...reminders.map(r =>
+        aitem('warn', ICON_CLOCK2, `${r.name}${r.type === 'manual' ? ' — manual reminder' : ''}`, r.note, r.when))];
+
+      // AI Alerts — proactive predictions the AI surfaces from the lead data.
+      const aline = (sev, name, pred, act) => `
+        <div class="ai-line sev-${sev}">
+          <span class="ai-dot"></span>
+          <span class="ai-line-txt"><b>${name}</b> · ${pred} — <span class="ai-act">${act}</span></span>
+        </div>`;
+      const alines = (items) => items.length ? `<div class="ai-lines">${items.join('')}</div>` : `<div class="aempty">No AI predictions right now — they appear here as leads come in.</div>`;
+
+      // Illustrative follow-up ages + short next actions (the mock has a count, not timestamps).
+      const overdue = {
+        'BKG-88231': { age: '2 days', act: 'send trainer proof points + a slot' },
+        'BKG-88240': { age: '3 days', act: 'confirm father’s trial slot & plan' }
+      };
+      const aiLines = [];
+      // High predicted conversion — prioritise
+      salesLeads.filter(d => ls(d.booking).stage === 'new' && d.ai.conversion.level === 'High' && !d.followUp)
+        .forEach(d => aiLines.push(aline('green', d.name, `${d.ai.conversion.pct}% likely to convert`, 'prioritise — call today')));
+      // Call not yet started
+      salesLeads.filter(d => ls(d.booking).stage === 'new' && !d.followUp && !d.ai.langGap && d.ai.conversion.level !== 'Low')
+        .forEach(d => aiLines.push(aline('blue', d.name, 'call not started', 'call now before drop-off')));
+      // Follow-up gone stale
+      salesLeads.filter(d => d.followUp).forEach(d => {
+        const o = overdue[d.booking] || { age: '2 days', act: 're-engage now' };
+        aiLines.push(aline('warn', d.name, `follow-up overdue ${o.age}`, o.act));
+      });
+      // At risk of dropping
+      salesLeads.filter(d => d.ai.conversion.level === 'Low')
+        .forEach(d => aiLines.push(aline('red', d.name, `${d.ai.conversion.pct}% likely · intent ${d.assess.intentStars}/5`, 'at risk — win-back or deprioritise')));
+      // Language-gap leads a rep has actually rescheduled to the AI
+      salesLeads.filter(d => ls(d.booking).outcome === 'ai-call')
+        .forEach(d => aiLines.push(aline('purple', d.name, 'rescheduled for AI call', 'AI will call in their language & summarise')));
 
       const section = (title, content) => `
         <section class="fse-section">
@@ -1873,16 +2252,313 @@
         </section>`;
       return `
         <div class="fse-panel">
-          ${section("Today's New Leads", list(newLeads, 'No new uncalled leads right now.'))}
+          ${section("Today's New Leads", nlist(newLeads))}
           ${section('Follow Up Reminder', list(followItems, 'No follow-up reminders yet — add one from a lead after the call.'))}
-          ${section('AI Alerts', list(aiItems, 'No AI-flagged calls. Language-gap calls rescheduled to the AI appear here.'))}
+          ${section('AI Alerts', alines(aiLines))}
         </div>`;
     }
 
     // ---- Sales Performance ----
     const ICON_CHART = '<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>';
+
+    // Salespeople and the period filter. Money tiles are DERIVED from the detail
+    // lists below (potential = Σ open prospects, missed = Σ losses), so everything
+    // a viewer sees stays internally consistent.
+    const SALES_REPS = ['Aarav Mehta', 'Priya Nair'];
+    const PERIOD_LABELS = { week: 'This Week', month: 'This Month', quarter: 'This Quarter' };
+    let salesFilter = { period: 'week', person: 'all' };
+
+    // Per salesperson, per period. funnel = {leads, called, trial}; conversions +
+    // captured are headline figures; prospects/misses/losses drive the lists.
+    const PERF_DATA = {
+      week: {
+        'Aarav Mehta': {
+          leads: 22, called: 19, trial: 13, conversions: 8, captured: 178000, tatHours: 1.8, convertDays: 5.4,
+          prospects: [
+            { lead: 'Karan Bhatia', amount: 44999, likelihood: 'High', ai: 'Offline trial done, hesitating on price. AI reads intent at 4/5 — send the plan comparison and a testimonial today.' },
+            { lead: 'Vikram Rao', amount: 24999, likelihood: 'Medium', ai: 'Booking for father (62). Warm but price-sensitive — AI suggests leading with the 3-month offline plan plus a free doctor consult.' },
+            { lead: 'Sara Khan', amount: 22999, likelihood: 'Medium', ai: 'Diabetes-management goal, awaiting slot confirmation. AI: follow up within 24h to keep momentum.' }
+          ],
+          losses: [
+            { lead: 'Rohit Sen', reason: 'Competitor', amount: 24999, note: 'Chose a local gym with an in-person trainer.' },
+            { lead: 'Aditya Nair', reason: 'Delay', amount: 12999, note: 'Callback slipped twice; went cold before the plan pitch.' }
+          ],
+          misses: {
+            reminder: [{ lead: 'Aditya Nair', detail: 'Reminder for the 21 May callback fired but no call was logged.' }],
+            fresh: [{ lead: 'Imran Qureshi', detail: 'Fresh lead from Meta Ads, untouched for 9 days.' }],
+            cold: [{ lead: 'Deepa Rao', detail: 'Try 1 done 20 May; not moved to Cold within the 4-day SLA (now day 6).' }]
+          }
+        },
+        'Priya Nair': {
+          leads: 18, called: 15, trial: 9, conversions: 6, captured: 132000, tatHours: 2.9, convertDays: 6.8,
+          prospects: [
+            { lead: 'Neha Kapoor', amount: 46998, likelihood: 'High', ai: 'PCOS fitness, strong engagement on the trial. AI: nudge toward the 6-month plan with the nutrition add-on.' },
+            { lead: 'Meera Joshi', amount: 22999, likelihood: 'High', ai: 'Post-pregnancy goals, asked for trainer credentials. AI: share certified-trainer profiles — likely to book online.' },
+            { lead: 'Arjun Das', amount: 12999, likelihood: 'Medium', ai: 'Weight-loss goal, comfortable to proceed but quiet since the trial. AI: re-engage with a starter offer.' }
+          ],
+          losses: [
+            { lead: 'Sunil Pillai', reason: 'Pricing', amount: 22999, note: 'Found the 6-month plan too steep; declined even after a discount.' }
+          ],
+          misses: {
+            reminder: [{ lead: 'Sara Khan', detail: 'Slot-confirmation reminder missed; lead still waiting on a callback.' }],
+            fresh: [],
+            cold: [{ lead: 'Tara Menon', detail: 'Try 1 on 19 May; the Cold transition is pending past the 4-day SLA.' }]
+          }
+        }
+      },
+      month: {
+        'Aarav Mehta': {
+          leads: 78, called: 71, trial: 44, conversions: 29, captured: 648000, tatHours: 2.1, convertDays: 6.0,
+          prospects: [
+            { lead: 'Karan Bhatia', amount: 44999, likelihood: 'High', ai: 'High intent after the offline trial; only price stands in the way. AI: offer the 6-month plan at a small concession.' },
+            { lead: 'Lakshmi Iyer', amount: 22999, likelihood: 'High', ai: 'Knee-rehab case comparing us with a physio clinic. AI: emphasise at-home convenience and progress tracking.' },
+            { lead: 'Vikram Rao', amount: 24999, likelihood: 'Medium', ai: 'Father (62), offline near Indiranagar. AI: confirm a trial slot this week before interest cools.' },
+            { lead: 'Sara Khan', amount: 22999, likelihood: 'Medium', ai: 'Diabetes-management goal; awaiting slot. AI: a doctor-consult add-on could tip this to a yes.' }
+          ],
+          losses: [
+            { lead: 'Manish Gupta', reason: 'Pricing', amount: 44999, note: 'Wanted the 6-month plan at the 3-month price.' },
+            { lead: 'Rohit Sen', reason: 'Competitor', amount: 24999, note: 'Chose a local gym with an in-person trainer.' },
+            { lead: 'Aditya Nair', reason: 'Delay', amount: 12999, note: 'Callback slipped twice; went cold before the pitch.' },
+            { lead: 'Farah Sheikh', reason: 'Delay', amount: 12999, note: 'Travelling; lost momentum after two reschedules.' }
+          ],
+          misses: {
+            reminder: [
+              { lead: 'Aditya Nair', detail: 'Callback reminder fired with no call logged.' },
+              { lead: 'Pooja Reddy', detail: 'Two callback reminders missed in the same week.' }
+            ],
+            fresh: [
+              { lead: 'Imran Qureshi', detail: 'Meta Ads lead untouched for 9 days.' },
+              { lead: 'Sandeep Yadav', detail: 'Fresh referral lead pending for 11 days.' }
+            ],
+            cold: [{ lead: 'Deepa Rao', detail: 'Try 1 on 20 May; Cold transition breached the 4-day SLA.' }]
+          }
+        },
+        'Priya Nair': {
+          leads: 64, called: 58, trial: 33, conversions: 21, captured: 458000, tatHours: 3.1, convertDays: 7.2,
+          prospects: [
+            { lead: 'Neha Kapoor', amount: 46998, likelihood: 'High', ai: 'Strong trial engagement. AI: 6-month plan with the nutrition add-on is the natural next step.' },
+            { lead: 'Meera Joshi', amount: 22999, likelihood: 'High', ai: 'Wants trainer credentials before committing. AI: send certified-trainer profiles.' },
+            { lead: 'Ritu Saxena', amount: 24999, likelihood: 'Medium', ai: 'Senior parent, wants offline near Whitefield. AI: confirm centre proximity — strong fit.' },
+            { lead: 'Arjun Das', amount: 12999, likelihood: 'Medium', ai: 'Quiet since the trial. AI: a starter offer should re-open the conversation.' }
+          ],
+          losses: [
+            { lead: 'Gaurav Malhotra', reason: 'Competitor', amount: 24999, note: 'Signed with a residential-society fitness program.' },
+            { lead: 'Sunil Pillai', reason: 'Pricing', amount: 22999, note: 'Found the 6-month plan too steep even after a discount.' },
+            { lead: 'Anjali Verma', reason: 'Delay', amount: 9999, note: 'Repeated reschedules; deprioritised.' }
+          ],
+          misses: {
+            reminder: [{ lead: 'Sara Khan', detail: 'Slot-confirmation reminder missed.' }],
+            fresh: [{ lead: 'Bhavna Shah', detail: 'Website lead pending for 8 days.' }],
+            cold: [
+              { lead: 'Tara Menon', detail: 'Try 1 on 19 May; Cold transition past the 4-day SLA.' },
+              { lead: 'Vivek Anand', detail: 'Try 1 on 12 May; Cold SLA breached.' }
+            ]
+          }
+        }
+      },
+      quarter: {
+        'Aarav Mehta': {
+          leads: 214, called: 196, trial: 121, conversions: 79, captured: 1786000, tatHours: 2.0, convertDays: 6.3,
+          prospects: [
+            { lead: 'Naveen Kumar', amount: 49998, likelihood: 'High', ai: 'Corporate wellness enquiry for both parents. AI: bundle two memberships — high-value deal.' },
+            { lead: 'Karan Bhatia', amount: 44999, likelihood: 'High', ai: 'Only price stands between trial and close. AI: a small 6-month concession should convert.' },
+            { lead: 'Lakshmi Iyer', amount: 22999, likelihood: 'High', ai: 'Knee-rehab case; at-home convenience is the winning angle.' },
+            { lead: 'Vikram Rao', amount: 24999, likelihood: 'Medium', ai: 'Offline trial for father; needs a firm slot to progress.' },
+            { lead: 'Sara Khan', amount: 22999, likelihood: 'Medium', ai: 'A doctor-consult add-on could tip this to a yes.' }
+          ],
+          losses: [
+            { lead: 'Manish Gupta', reason: 'Pricing', amount: 44999, note: 'Wanted the 6-month plan at the 3-month price.' },
+            { lead: 'Rohit Sen', reason: 'Competitor', amount: 24999, note: 'Chose a local gym with an in-person trainer.' },
+            { lead: 'Kavya Reddy', reason: 'Competitor', amount: 22999, note: 'Chose a celebrity-trainer app.' },
+            { lead: 'Aditya Nair', reason: 'Delay', amount: 12999, note: 'Repeated callback slips; went cold.' }
+          ],
+          misses: {
+            reminder: [
+              { lead: 'Aditya Nair', detail: 'Callback reminder fired with no call logged.' },
+              { lead: 'Pooja Reddy', detail: 'Two callback reminders missed in one week.' }
+            ],
+            fresh: [
+              { lead: 'Imran Qureshi', detail: 'Meta Ads lead untouched for 9 days.' },
+              { lead: 'Sandeep Yadav', detail: 'Referral lead pending for 11 days.' }
+            ],
+            cold: [
+              { lead: 'Deepa Rao', detail: 'Try 1 on 20 May; Cold SLA breached.' },
+              { lead: 'Nikhil Jain', detail: 'Try 1 on 2 May; Cold SLA breached.' }
+            ]
+          }
+        },
+        'Priya Nair': {
+          leads: 178, called: 162, trial: 96, conversions: 58, captured: 1268000, tatHours: 3.0, convertDays: 7.0,
+          prospects: [
+            { lead: 'Neha Kapoor', amount: 46998, likelihood: 'High', ai: '6-month plan with the nutrition add-on is the natural next step.' },
+            { lead: 'Ritu Saxena', amount: 24999, likelihood: 'Medium', ai: 'Senior parent wants offline near Whitefield — confirm centre proximity.' },
+            { lead: 'Harini Suresh', amount: 24498, likelihood: 'High', ai: 'Yoga + strength enquiry. AI: pitch 6-month with the emotional-wellbeing add-on.' },
+            { lead: 'Meera Joshi', amount: 22999, likelihood: 'High', ai: 'Send certified-trainer profiles; likely to book online.' },
+            { lead: 'Arjun Das', amount: 12999, likelihood: 'Medium', ai: 'A starter offer should re-open the conversation.' }
+          ],
+          losses: [
+            { lead: 'Gaurav Malhotra', reason: 'Competitor', amount: 24999, note: 'Signed with a residential-society fitness program.' },
+            { lead: 'Sunil Pillai', reason: 'Pricing', amount: 22999, note: 'Found the 6-month plan too steep.' },
+            { lead: 'Anjali Verma', reason: 'Delay', amount: 9999, note: 'Repeated reschedules; deprioritised.' }
+          ],
+          misses: {
+            reminder: [
+              { lead: 'Sara Khan', detail: 'Slot-confirmation reminder missed.' },
+              { lead: 'Mohit Bansal', detail: 'Reminder missed twice this month.' }
+            ],
+            fresh: [{ lead: 'Bhavna Shah', detail: 'Website lead pending for 8 days.' }],
+            cold: [
+              { lead: 'Tara Menon', detail: 'Try 1 on 19 May; Cold SLA breached.' },
+              { lead: 'Vivek Anand', detail: 'Try 1 on 12 May; Cold SLA breached.' }
+            ]
+          }
+        }
+      }
+    };
+
+    // Build the view for the chosen period + salesperson. For "all", sum the funnel
+    // and money, weight the time metrics, and concatenate the detail lists.
+    function perfSlice(period, person) {
+      const all = PERF_DATA[period];
+      const names = person === 'all' ? Object.keys(all) : [person];
+      const recs = names.map(n => ({ name: n, ...all[n] }));
+      const sum = k => recs.reduce((s, r) => s + r[k], 0);
+      const wLeads = sum('leads') || 1, wConv = sum('conversions') || 1;
+      const tatHours = recs.reduce((s, r) => s + r.tatHours * r.leads, 0) / wLeads;
+      const convertDays = recs.reduce((s, r) => s + r.convertDays * r.conversions, 0) / wConv;
+      const tag = (arr, r) => arr.map(x => ({ ...x, owner: r.name }));
+      const prospects = recs.flatMap(r => tag(r.prospects, r));
+      const losses = recs.flatMap(r => tag(r.losses, r));
+      const misses = {
+        reminder: recs.flatMap(r => tag(r.misses.reminder, r)),
+        fresh: recs.flatMap(r => tag(r.misses.fresh, r)),
+        cold: recs.flatMap(r => tag(r.misses.cold, r))
+      };
+      return {
+        multi: names.length > 1,
+        leads: sum('leads'), called: sum('called'), trial: sum('trial'),
+        conversions: sum('conversions'), captured: sum('captured'),
+        tatHours, convertDays, prospects, losses, misses,
+        potential: prospects.reduce((s, p) => s + p.amount, 0),
+        missed: losses.reduce((s, l) => s + l.amount, 0)
+      };
+    }
+
     function salesPerfTab() {
-      return empty(ICON_CHART, 'Sales Performance', 'Sales performance metrics will appear here.');
+      const s = perfSlice(salesFilter.period, salesFilter.person);
+      const periodLbl = PERIOD_LABELS[salesFilter.period];
+      const firstName = (full) => full.split(' ')[0];
+      const owner = (o) => s.multi ? `<span class="owner-tag">${firstName(o.owner)}</span>` : '';
+
+      // Filter bar
+      const seg = Object.keys(PERIOD_LABELS).map(p =>
+        `<button data-period="${p}" class="${salesFilter.period === p ? 'active' : ''}">${PERIOD_LABELS[p]}</button>`).join('');
+      const personOpts = ['all', ...SALES_REPS].map(p =>
+        `<option value="${p}" ${salesFilter.person === p ? 'selected' : ''}>${p === 'all' ? 'All Salespeople' : p}</option>`).join('');
+      const filters = `
+        <div class="perf-filters">
+          <span class="pf-label">Period</span>
+          <div class="perf-seg">${seg}</div>
+          <span class="pf-spacer"></span>
+          <span class="pf-label">Salesperson</span>
+          <select class="perf-person" id="perfPerson">${personOpts}</select>
+        </div>`;
+
+      // Funnel
+      const stages = [
+        { cls: '', label: 'Leads', n: s.leads },
+        { cls: '', label: 'Called', n: s.called },
+        { cls: '', label: 'Trial', n: s.trial },
+        { cls: 'conv', label: 'Converted', n: s.conversions }
+      ];
+      const maxN = s.leads || 1;
+      const funnelRows = stages.map(st => `
+        <div class="funnel-row">
+          <span class="funnel-label">${st.label}</span>
+          <div class="funnel-track"><div class="funnel-fill ${st.cls}" style="width:${Math.max(6, st.n / maxN * 100)}%"></div></div>
+          <span class="funnel-count">${st.n}</span>
+        </div>`).join('');
+      const convRate = s.leads ? Math.round(s.conversions / s.leads * 100) : 0;
+      const funnel = `
+        <div class="perf-card">
+          <div class="perf-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CHART}</svg>Conversion Funnel<span class="pc-sub">${periodLbl}</span></div>
+          <div class="perf-funnel">
+            ${funnelRows}
+            <div class="funnel-foot">Conversion rate <b>${convRate}%</b> · ${s.conversions} of ${s.leads} leads converted</div>
+          </div>
+        </div>`;
+
+      // Money rail + time chips
+      const money = `
+        <div class="perf-card">
+          <div class="perf-card-head">Revenue</div>
+          <div class="perf-money">
+            <div class="money-tile cap"><span class="mt-label">Amount Captured</span><span class="mt-val">${inrShort(s.captured)}</span><span class="mt-sub">from ${s.conversions} conversions · credited</span></div>
+            <div class="money-tile miss"><span class="mt-label">Amount Missed</span><span class="mt-val">${inrShort(s.missed)}</span><span class="mt-sub">from ${s.losses.length} loss${s.losses.length === 1 ? '' : 'es'}</span></div>
+            <div class="money-tile pot"><span class="mt-label">Potential Amount</span><span class="mt-val">${inrShort(s.potential)}</span><span class="mt-sub">across ${s.prospects.length} open prospects</span></div>
+            <div class="perf-chips">
+              <div class="perf-chip"><span class="ch-val">${s.tatHours.toFixed(1)}h</span><span class="ch-label">Turn Around Time · lead → first call</span></div>
+              <div class="perf-chip"><span class="ch-val">${s.convertDays.toFixed(1)}d</span><span class="ch-label">Avg Time to Convert · lead → conversion</span></div>
+            </div>
+          </div>
+        </div>`;
+
+      const hero = `<div class="perf-hero">${funnel}${money}</div>`;
+
+      // Open prospects
+      const prospectRows = s.prospects.length ? s.prospects.map(p => `
+        <div class="prospect-row">
+          <div class="prospect-main">
+            <span class="prospect-name">${p.lead}${owner(p)}</span>
+            <span class="prospect-ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg><span>${p.ai}</span></span>
+          </div>
+          <div class="prospect-side">
+            <div class="prospect-amt">${inr(p.amount)}</div>
+            <span class="likeli ${p.likelihood.toLowerCase()}">${p.likelihood}</span>
+          </div>
+        </div>`).join('') : `<div class="aempty">No open prospects in this period.</div>`;
+      const prospectsCard = `
+        <div class="perf-card">
+          <div class="perf-card-head">Open Prospects<span class="pc-sub">${s.prospects.length} · ${inrShort(s.potential)} potential · flagged by AI</span></div>
+          <div class="perf-list">${prospectRows}</div>
+        </div>`;
+
+      // Misses (3 grouped types)
+      const missTypes = [
+        { key: 'reminder', title: 'Reminders missed' },
+        { key: 'fresh', title: 'Fresh leads pending > 7 days' },
+        { key: 'cold', title: 'Try 1 → Cold not done in 4 days' }
+      ];
+      const missCount = s.misses.reminder.length + s.misses.fresh.length + s.misses.cold.length;
+      const missGroups = missTypes.map(t => {
+        const items = s.misses[t.key];
+        if (!items.length) return '';
+        const rows = items.map(m => `<div class="miss-item"><span class="mi-dot"></span><span><b>${m.lead}${s.multi ? ` · ${firstName(m.owner)}` : ''}</b> — ${m.detail}</span></div>`).join('');
+        return `<div class="miss-group"><div class="miss-gh"><span class="mg-title">${t.title}</span><span class="mg-count">${items.length}</span></div>${rows}</div>`;
+      }).join('');
+      const missesCard = `
+        <div class="perf-card">
+          <div class="perf-card-head">Misses<span class="pc-sub">${missCount} flagged</span></div>
+          ${missCount ? missGroups : '<div class="perf-list"><div class="aempty">No misses in this period — reminders, SLAs and fresh-lead ages are all on track.</div></div>'}
+        </div>`;
+
+      // Losses (tagged by reason)
+      const lossRows = s.losses.length ? s.losses.map(l => `
+        <div class="loss-row">
+          <div class="loss-main">
+            <div class="loss-name">${l.lead}${owner(l)}</div>
+            <div class="loss-note">${l.note}</div>
+          </div>
+          <span class="reason-tag ${l.reason.toLowerCase()}">${l.reason}</span>
+          <span class="loss-amt">${inr(l.amount)}</span>
+        </div>`).join('') : `<div class="aempty">No losses in this period.</div>`;
+      const lossesCard = `
+        <div class="perf-card">
+          <div class="perf-card-head">Losses<span class="pc-sub">${s.losses.length} · ${inrShort(s.missed)} missed</span></div>
+          <div class="perf-list">${lossRows}</div>
+        </div>`;
+
+      return `<div class="perf-wrap">${filters}${hero}${prospectsCard}${missesCard}${lossesCard}</div>`;
     }
 
     function setLeadsTab(tab) {
@@ -1895,9 +2571,15 @@
       document.querySelectorAll('.person-head').forEach(h =>
         h.addEventListener('click', () => h.closest('.person-row').classList.toggle('expanded'))
       );
+      // Sales Performance filters — re-render in place on change.
+      document.querySelectorAll('.perf-seg button').forEach(b =>
+        b.addEventListener('click', () => { salesFilter.period = b.dataset.period; setLeadsTab('sales'); })
+      );
+      const perfPerson = document.getElementById('perfPerson');
+      if (perfPerson) perfPerson.addEventListener('change', () => { salesFilter.person = perfPerson.value; setLeadsTab('sales'); });
     }
 
-    function renderLeadsPage() {
+    function renderSalesPage() {
       workspace.innerHTML = `
         <div class="ws-page">
           <div class="ws-toolbar">
@@ -1937,8 +2619,8 @@
       navLinks.forEach(a => a.classList.remove('active'));
       link.classList.add('active');
       const page = link.dataset.page;
-      if (page === 'Leads') {
-        renderLeadsPage();
+      if (page === 'Sales') {
+        renderSalesPage();
       } else if (page === 'FSE') {
         renderFsePage();
       } else {
@@ -1958,22 +2640,36 @@
     // ---------------- In-call AI cockpit (full-screen guided flow) ----------------
     let cockpitId = null, cpStart = 0, cpTimer = null;
 
-    const CP_STEPS = [
-      { key: 'details', title: 'Capture Details', sub: 'Confirm what we already have, and let the AI capture the rest as you ask.',
-        say: ['“Hi, am I speaking with {first}?”', 'Confirm if they’re booking for themselves or a parent.', 'Ask the highlighted questions — the AI fills them in for you.'],
-        checks: [] },
-      { key: 'intent', title: 'Intent & Pain Points', sub: 'List the pain points & goals — the AI rates them and summarises intent.',
-        say: ['“What are the main pain points you’re facing?”', 'List each one — the AI rates severity out of 5.', '“And what are your fitness goals?” Notes are optional.'],
-        checks: [] },
-      { key: 'subs', title: 'Our Subscriptions', sub: 'Explain all 7 onboarding steps, pick the plan & add-ons; the total updates live.',
-        say: ['Explain all 7 onboarding steps — tick each as you say it.', 'Pick the plan (turns green); add-ons update the total.', 'Skipped a step? It’s flagged red when you move on.'],
-        checks: [] },
-      { key: 'book', title: 'Decision & Booking', sub: 'Subscription by location, trial, date & FSE/physio slot — then the outcome.',
-        say: ['Bengaluru → online or offline; elsewhere → online only.', 'As they decide, set the trial type, date & slot.', 'Pick the outcome: convert, session, assessment, or not converted.'],
-        checks: [] },
-      { key: 'summary', title: 'Call Summary', sub: 'Review the AI summary of the call, then end to save everything.',
-        say: ['Recap the agreed next steps with the customer.', 'Check the call-type label is set (reminder below).', 'End the call to save & route the lead.'],
-        checks: [] }
+    // Four sections, no numbering. The AI walks the rep through each section's spoken
+    // lines (the teleprompter); `gate` points pause the flow until the rep makes a
+    // decision; one `skip` point demonstrates a section going orange when talk jumps around.
+    const SEC_ICONS = {
+      details: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/>',
+      intent:  '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+      subs:    '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+      book:    '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'
+    };
+    const SECTIONS = [
+      { key: 'details', title: 'Details', icon: SEC_ICONS.details, points: [
+        { say: '“Hi, am I speaking with {first}?”' },
+        { say: '“Are you booking for yourself or a family member?”' },
+        { say: '“Got it — and how old are they?”' },
+        { say: '“Which area are you based in?”' },
+        { say: '“Any health conditions or medications I should note for the doctor?”' },
+        { say: '“And when’s the best time to reach you?”' }
+      ] },
+      { key: 'intent', title: 'Intent & Pain', icon: SEC_ICONS.intent, points: [
+        { say: '“What are the main pain points you’re facing?”' },
+        { say: '“How severe is it, and how long has it been going on?”' },
+        { say: '“And what are your main fitness goals?”' },
+        { say: '“How soon are you looking to get started?”', skip: true }
+      ] },
+      { key: 'book', title: 'Book Assessment', icon: SEC_ICONS.book, points: [
+        { say: 'Pitch the free assessment — a physio reviews them, no commitment.' },
+        { say: 'Confirm online or offline based on their location.' },
+        { say: 'Confirm the assessment type as they decide.' },
+        { say: 'Confirm the details below to book the assessment.', gate: 'booking' }
+      ] }
     ];
 
     const fmtTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
@@ -2011,23 +2707,15 @@
       div.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>${html}</span>`;
       el.appendChild(div);
     }
-    // The AI "listens" and checkmarks the unknown details for the rep (no manual ticking).
+    // The AI "listens" and records the unknown details for the rep, one by one.
     function scheduleAICapture(d, st) {
       const pending = CAPTURE_FIELDS.map(f => ({ ...f, val: d.capture[f.key] }))
         .filter(f => f.val && f.val !== '—' && !st.captureDone[f.key]);
       pending.forEach((f, idx) => {
         const t = setTimeout(() => {
           st.captureDone[f.key] = true;
-          const row = document.querySelector(`#callCockpit [data-capfield="${f.key}"]`);
-          if (row) {
-            row.classList.remove('missing'); row.classList.add('got');
-            const chk = row.querySelector('.cap-check'); if (chk) chk.classList.add('on');
-            const v = row.querySelector('.cap-val'); if (v) v.textContent = f.val;
-            const q = row.querySelector('.cap-q'); if (q) q.remove();
-            const s = row.querySelector('.cap-status'); if (s) s.textContent = 'AI ✓';
-          }
-          appendCpFeed(`AI captured <b>${f.label}</b>: ${f.val}`);
-        }, 1100 * (idx + 1));
+          const rec = document.getElementById('cpRecorded'); if (rec) rec.innerHTML = recordedInner(d, st);
+        }, 1200 * (idx + 1));
         cpCapTimers.push(t);
       });
     }
@@ -2040,15 +2728,19 @@
         cpAssessTimer = null;
         st.assessReady = true;
         st.intent = d.assess.intentStars;
-        renderCockpit();
-      }, 1400);
+        const rec = document.getElementById('cpRecorded'); if (rec) rec.innerHTML = recordedInner(d, st);
+        const pr = document.getElementById('cpPrompter'); if (pr) pr.innerHTML = prompterInner(d, st);
+      }, 1500);
     }
 
     // Page 3 — subscription plans, add-ons, and intent-based pricing.
     const PLANS = [
-      { key: '1m', name: '1 Month', base: { online: 4999, offline: 9999 } },
-      { key: '3m', name: '3 Months', base: { online: 12999, offline: 24999 } },
-      { key: '6m', name: '6 Months', base: { online: 22999, offline: 44999 } }
+      { key: '1m', name: '1 Month',  base: { online: 4999, offline: 9999 },
+        includes: ['Personalised plan', 'Dedicated physio', '12 guided sessions', 'App + progress tracking'] },
+      { key: '3m', name: '3 Months', base: { online: 12999, offline: 24999 },
+        includes: ['Everything in 1 Month', '40 guided sessions', 'Weekly check-ins', 'Nutrition basics'] },
+      { key: '6m', name: '6 Months', base: { online: 22999, offline: 44999 },
+        includes: ['Everything in 3 Months', '90 guided sessions', 'Quarterly reassessment', 'Priority physio access'] }
     ];
     const ADDONS = [
       { key: 'nutrition', name: 'Nutrition', price: 1999 },
@@ -2057,6 +2749,13 @@
     ];
     const intentDiscount = (stars) => stars >= 4 ? 0 : stars === 3 ? 0.10 : 0.20;
     const inr = (n) => '₹' + n.toLocaleString('en-IN');
+    // Compact INR for aggregate figures: 1786000 → ₹17.86L, 310000 → ₹3.1L, 9999 → ₹10K
+    const inrShort = (n) => {
+      if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2).replace(/\.?0+$/, '') + 'Cr';
+      if (n >= 100000)   return '₹' + (n / 100000).toFixed(2).replace(/\.?0+$/, '') + 'L';
+      if (n >= 1000)     return '₹' + (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+      return '₹' + n;
+    };
     function planPrice(plan, mode, stars) {
       const base = plan.base[mode === 'offline' ? 'offline' : 'online'], disc = intentDiscount(stars);
       const now = disc > 0 ? Math.round(base * (1 - disc) / 100) * 100 : base;
@@ -2081,14 +2780,7 @@
     // Page 4 — FSE / physio time slots (after a date is chosen).
     const FSE_TIMES = ['9:00 AM', '11:00 AM', '1:00 PM', '3:00 PM', '6:00 PM', '7:30 PM'];
 
-    // Per-page talking points the AI walks the rep through, one at a time.
-    const CP_POINTS = {
-      details: ['Greet & confirm who you’re speaking with', 'Booking for self or a parent?', 'Patient’s age & gender', 'Their location / area', 'Best time to contact'],
-      intent: ['Ask the main pain points', 'How severe & how long', 'Their fitness goals', 'How soon they want to start'],
-      subs: ONBOARDING.slice(),
-      book: ['Confirm subscription — online or offline', 'Confirm the trial type', 'Agree a date', 'Read out an FSE slot & physio', 'Confirm the outcome'],
-      summary: ['Recap pain points & the agreed plan', 'Confirm the next steps', 'Set the call-type label']
-    };
+    // (Talking points now live inside SECTIONS above.)
 
     // If the customer uses a difficult term, the AI tells the rep how to pitch the benefit.
     const TERMS = {
@@ -2114,9 +2806,10 @@
 
     function openCockpit(id) {
       const st = ls(id);
-      st.stage = 'calling'; st.callStep = 1; st.caps = {}; st.notes = {}; st.payment = null; st.captureDone = {};
-      st.assessReady = false; st.plan = null; st.addons = []; st.onbLeft = false; st.date = '';
-      st.pageLeft = {}; st.termHint = null;
+      st.stage = 'calling'; st.caps = {}; st.skips = {}; st.notes = {}; st.payment = null; st.captureDone = {};
+      st.assessReady = false; st.plan = null; st.addons = []; st.date = '';
+      st.mode = null; st.trial = null; st.physio = null; st.slot = null; st.label = null; st.intent = 0;
+      st.termHint = null; st._lastActive = null; st._nag = false;
       cockpitId = id; cpStart = Date.now();
       let overlay = document.getElementById('callCockpit');
       if (!overlay) { overlay = document.createElement('div'); overlay.id = 'callCockpit'; document.body.appendChild(overlay); bindCockpit(overlay); }
@@ -2134,28 +2827,69 @@
       cockpitId = null;
     }
 
-    // The AI "hears" each point being said and ticks it off — no buttons; the active point flows down.
+    // ---- Flow engine: one continuous timeline across all sections, no Next button ----
+    const ptKey = (key, i) => 'pt-' + key + '-' + i;
+    const isCovered = (st, key, i) => !!st.caps[ptKey(key, i)];
+    const isSkipped = (st, key, i) => !!st.skips[ptKey(key, i)];
+    function flatPts() {
+      const a = [];
+      SECTIONS.forEach(s => s.points.forEach((p, i) => a.push({ key: s.key, i, p })));
+      return a;
+    }
+    // The point the flow is currently "at" — first one neither covered nor skipped.
+    function curFlat(st) {
+      const a = flatPts();
+      return { a, idx: a.findIndex(x => !isCovered(st, x.key, x.i) && !isSkipped(st, x.key, x.i)) };
+    }
+    function activeKey(st) { const { a, idx } = curFlat(st); return idx === -1 ? null : a[idx].key; }
+    function bookingReady(d, st) {
+      if (!st.payment) return false;
+      const mode = st.mode || (isBLR(d) ? null : 'online');
+      if (st.payment === 'denies') return true;
+      if (st.payment === 'convert') return !!mode;
+      return !!mode && (mode === 'online' || st.trial) && !!st.physio && !!st.slot && !!st.date;
+    }
+    function gateMet(gate, d, st) { return gate === 'plan' ? !!st.plan : gate === 'booking' ? bookingReady(d, st) : true; }
+    function callReady(d, st) { return bookingReady(d, st) && !!st.label; }
+    // Section colour: green=all covered · blue=active · orange=flow moved past it incomplete · grey=not reached.
+    function secStatus(st, sIdx) {
+      const s = SECTIONS[sIdx], total = s.points.length;
+      const cov = s.points.filter((p, i) => isCovered(st, s.key, i)).length;
+      if (cov === total) return 'done';
+      const ak = activeKey(st);
+      if (s.key === ak) return 'active';
+      const aIdx = ak ? SECTIONS.findIndex(x => x.key === ak) : SECTIONS.length;
+      return sIdx < aIdx ? 'skip' : 'todo';
+    }
+
     let cpFlowTimer = null;
     function flowTick() {
-      const st = ls(cockpitId); if (!st) return;
-      const key = CP_STEPS[st.callStep - 1].key, pts = CP_POINTS[key] || [];
-      const i = pts.findIndex((p, idx) => !st.caps['pt-' + key + '-' + idx]);
-      if (i === -1) { clearInterval(cpFlowTimer); cpFlowTimer = null; return; }
-      st.caps['pt-' + key + '-' + i] = true;
-      const row = document.querySelector(`#callCockpit .pt-row[data-pt="${i}"]`);
-      if (row) { row.classList.remove('now'); row.classList.add('got'); const ck = row.querySelector('.pt-ck'); if (ck) ck.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>'; }
-      const next = pts.findIndex((p, idx) => !st.caps['pt-' + key + '-' + idx]);
-      if (next !== -1) { const nr = document.querySelector(`#callCockpit .pt-row[data-pt="${next}"]`); if (nr && !nr.classList.contains('got')) nr.classList.add('now'); }
-      const cnt = document.getElementById('cpPtCount'); if (cnt) cnt.textContent = `${pts.filter((p, idx) => st.caps['pt-' + key + '-' + idx]).length}/${pts.length}`;
-      const now = document.getElementById('cpNow');
-      if (now) { now.className = 'prompt-now' + (next === -1 ? ' done' : ''); now.innerHTML = promptNowInner(pts, next); }
-      if (next === -1) { clearInterval(cpFlowTimer); cpFlowTimer = null; }
+      const st = ls(cockpitId), d = LEADS.find(x => x.booking === cockpitId);
+      if (!st || !d) return;
+      const { a, idx } = curFlat(st);
+      if (idx === -1) { clearInterval(cpFlowTimer); cpFlowTimer = null; paintFlow(d, st); return; }
+      const cur = a[idx];
+      if (cur.p.gate && !gateMet(cur.p.gate, d, st)) { paintFlow(d, st); return; }  // paused: rep must decide
+      if (cur.p.skip) st.skips[ptKey(cur.key, cur.i)] = true;                        // AI "didn't hear" it → orange
+      else st.caps[ptKey(cur.key, cur.i)] = true;
+      const ak = activeKey(st);
+      if (ak === 'book' && !isBLR(d) && !st.mode) st.mode = 'online';                // outside BLR → online by default
+      if (ak === 'intent' && !st.assessReady && !cpAssessTimer) scheduleAIAssess(d, st);
+      paintFlow(d, st);
     }
     function startFlow() {
       if (cpFlowTimer) { clearInterval(cpFlowTimer); cpFlowTimer = null; }
-      const st = ls(cockpitId); if (!st) return;
-      const key = CP_STEPS[st.callStep - 1].key, pts = CP_POINTS[key] || [];
-      if (pts.some((p, i) => !st.caps['pt-' + key + '-' + i])) cpFlowTimer = setInterval(flowTick, 3000);
+      cpFlowTimer = setInterval(flowTick, 2600);
+    }
+
+    // Targeted repaint on each tick — leaves the notes pad (and any open input) untouched.
+    function paintFlow(d, st) {
+      const pr = document.getElementById('cpPrompter'); if (pr) pr.innerHTML = prompterInner(d, st);
+      const rec = document.getElementById('cpRecorded'); if (rec) rec.innerHTML = recordedInner(d, st);
+      const rm = document.getElementById('cpRemind'); if (rm) { rm.className = 'cp-remind' + (st._nag && !callReady(d, st) ? ' nag' : ''); rm.innerHTML = remindInner(d, st); }
+      SECTIONS.forEach((s, i) => { const el = document.querySelector(`#callCockpit .cp-sec-card[data-key="${s.key}"]`); if (el) el.className = 'cp-sec-card ' + secStatus(st, i); });
+      const ak = activeKey(st);
+      if (st._lastActive !== ak) { st._lastActive = ak; const da = document.getElementById('cpDecision'); if (da) da.innerHTML = decisionInner(d, st); }
     }
 
     function renderCockpit() {
@@ -2164,294 +2898,168 @@
       if (!d || !overlay) return;
       overlay.className = 'cockpit';
       overlay.innerHTML = cockpitHTML(d, st);
+      st._lastActive = activeKey(st);
       clearCapTimers();
-      if (cpAssessTimer && st.callStep !== 2) { clearTimeout(cpAssessTimer); cpAssessTimer = null; }
-      if (st.callStep === 1) scheduleAICapture(d, st);
-      else if (st.callStep === 2 && !st.assessReady) scheduleAIAssess(d, st);
+      scheduleAICapture(d, st);
+      if (activeKey(st) === 'intent' && !st.assessReady && !cpAssessTimer) scheduleAIAssess(d, st);
       startFlow();
     }
 
-    function cpNotesHTML(st, cfg, d) {
-      if (cfg.key === 'details') {
-        return CAPTURE_FIELDS.filter(f => st.captureDone[f.key])
-          .map(f => `<div class="cp-note-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>AI captured <b>${f.label}</b>: ${d.capture[f.key]}</span></div>`).join('');
-      }
-      return cfg.checks.map((c, i) => ({ c, on: !!st.caps[cfg.key + '-' + i] })).filter(x => x.on)
-        .map(x => `<div class="cp-note-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Noted: ${x.c}</span></div>`).join('');
-    }
-    function refreshCpFeedNotes() {
-      const st = ls(cockpitId), cfg = CP_STEPS[st.callStep - 1], d = LEADS.find(x => x.booking === cockpitId);
-      const el = document.getElementById('cpNotes'); if (el) el.innerHTML = cpNotesHTML(st, cfg, d);
-    }
-
     const ppStars = (n) => `<span class="pp-stars">${[1, 2, 3, 4, 5].map(k => `<span class="s ${k <= n ? 'on' : ''}">★</span>`).join('')}</span>`;
-    const isBLR = (d) => /bengaluru|bangalore/i.test(d.capture.location || '');
+    const isBLR = (d) => d.campaignType === 'inside-blr';
 
-    function stepDetails(d, st) {
-      const known = knownPairs(d).map(([l, v]) => capRow('k-' + l, l, v, true, '')).join('');
-      const caps = CAPTURE_FIELDS.map(f => {
-        const ans = d.capture[f.key], answerable = ans && ans !== '—', done = answerable && !!st.captureDone[f.key];
-        return capRow(f.key, f.label, done ? ans : '—', done, f.question);
+    // Center hero — the moving "say this next" teleprompter (current big+blue, then smaller).
+    function prompterInner(d, st) {
+      const first = d.name.split(' ')[0];
+      const { a, idx } = curFlat(st);
+      const say = (j) => a[j] ? a[j].p.say.replace('{first}', first) : null;
+      if (idx === -1) {
+        return `<div class="pn-label">Say this next</div>
+          <div class="pn-now done">All points covered ✓</div>
+          <div class="pn-sub">Set the outcome &amp; label below, then mark the call ended.</div>`;
+      }
+      const cur = a[idx];
+      const gatePaused = cur.p.gate && !gateMet(cur.p.gate, d, st);
+      const cue = gatePaused ? '↓ confirm the outcome &amp; booking below' : '';
+      // Only the current line — what comes next depends on the customer, decided live.
+      return `<div class="pn-label">Say this next</div>
+        <div class="pn-now"><span class="pn-live"></span>${say(idx)}</div>
+        ${cue ? `<div class="pn-cue">${cue}</div>` : ''}`;
+    }
+
+    // Left — section status cards (green done · blue active · orange skipped · grey to-do).
+    function sectionCards(d, st) {
+      const cards = SECTIONS.map((s, i) => {
+        const status = secStatus(st, i);
+        const lbl = status === 'done' ? 'Done' : status === 'active' ? 'Now' : status === 'skip' ? 'Skipped' : '';
+        return `<div class="cp-sec-card ${status}" data-key="${s.key}">
+          <span class="sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${s.icon}</svg></span>
+          <span class="sc-t">${s.title}</span>
+          <span class="sc-st">${lbl}</span>
+        </div>`;
       }).join('');
-      return `
-        <div class="cp-sec-label">Already on file · AI-confirmed</div><div class="cap-grid">${known}</div>
-        <div class="cp-sec-label">To capture on this call · the AI checkmarks these as you ask</div><div class="cap-grid">${caps}</div>`;
+      return `<aside class="cp-left"><div class="cp-left-head">Points to Cover</div><div class="cp-sec-list">${cards}</div></aside>`;
     }
 
-    function stepIntent(d, st) {
-      const ready = st.assessReady;
-      const painHTML = ready
-        ? (d.assess.painPoints.length ? d.assess.painPoints.map(p => `<div class="pp-row"><span class="pp-t">${p.t}</span>${ppStars(p.s)}<span class="pp-rate-lbl">AI ${p.s}/5</span></div>`).join('') : `<div class="pp-row"><span class="pp-t" style="color:var(--text-dim)">No clear pain points captured.</span></div>`)
-        : `<div class="ai-analysing"><span class="ld"></span>AI is analysing the call for pain points…</div>`;
-      const goalsHTML = ready
-        ? (d.assess.goals.length ? `<div class="goal-chips">${d.assess.goals.map(g => `<span class="goal-chip">${g}</span>`).join('')}</div>` : `<div class="goal-chips"><span style="color:var(--text-dim);font-size:12.5px">No goals captured.</span></div>`)
-        : `<div class="ai-analysing"><span class="ld"></span>Listening for fitness goals…</div>`;
-      const intentHTML = ready
-        ? `<div class="pp-row"><span class="pp-t">Customer Intent</span>${ppStars(st.intent)}<span class="pp-rate-lbl">AI ${st.intent}/5</span></div>`
-        : `<div class="ai-analysing"><span class="ld"></span>Gauging customer intent…</div>`;
-      const summaryHTML = ready ? `<div class="captured-text">${d.ai.intentSummary}</div>` : `<div class="ai-analysing"><span class="ld"></span>Summarising customer intent…</div>`;
-      return `
-        <div class="cp-sec-label">Pain Points · AI-listed &amp; rated /5 <span class="ai-tag">AI</span></div>
-        <div class="assess-block">${painHTML}</div>
-        <div class="cp-sec-label">Fitness Goals <span class="ai-tag">AI</span></div>
-        <div class="assess-block">${goalsHTML}</div>
-        <div class="cp-sec-label">Customer Intent <span class="ai-tag">AI</span></div>
-        <div class="assess-block">${intentHTML}</div>
-        <div class="cp-sec-label">Customer Intent Summary <span class="ai-tag">AI</span></div>
-        ${summaryHTML}`;
+    // Below the source row — everything the AI has recorded so far, growing through the call.
+    function recordedInner(d, st) {
+      const cap = d.capture, items = [];
+      if (st.captureDone.bookingFor) items.push(`Booking for: <b>${cap.bookingFor}</b>${st.captureDone.ageGender ? ` · ${cap.ageGender}` : ''}`);
+      else if (st.captureDone.ageGender) items.push(`Patient: <b>${cap.ageGender}</b>`);
+      if (st.captureDone.location) items.push(`Location: <b>${cap.location}</b>`);
+      if (st.captureDone.contactTime) items.push(`Best time to contact: <b>${cap.contactTime}</b>`);
+      if (st.assessReady) {
+        items.push(`Pain points: <b>${d.assess.painPoints.map(p => `${p.t} (${p.s}/5)`).join(', ') || '—'}</b>`);
+        if (d.assess.goals.length) items.push(`Goals: <b>${d.assess.goals.join(', ')}</b>`);
+        items.push(`Intent: <b>${st.intent}/5</b>`);
+      }
+      if (st.mode) items.push(`Mode: <b>${st.mode === 'online' ? 'Online' : 'Offline'}${st.trial ? ` · ${st.trial} assessment` : ''}</b>`);
+      if (st.physio && st.slot) items.push(`Assessment booked: <b>${st.physio} · ${st.date || ''} ${st.slot}</b>`);
+      if (st.payment) items.push(`Outcome: <b>${{ session: '₹1,000 paid assessment booked', assess: 'Free assessment booked', denies: 'Not interested' }[st.payment]}</b>`);
+      if (st.label) items.push(`Call label: <b>${st.label}</b>`);
+      if (!items.length) return `<div class="rec-empty">Nothing recorded yet — the AI fills this in as the call goes.</div>`;
+      return items.map(t => `<div class="rec-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>${t}</span></div>`).join('');
     }
 
-    function stepSubs(d, st) {
+    // Decision area inside the hero — plan pricing during Subscriptions, booking inputs during Booking.
+    function subsDecision(d, st) {
       const mode = st.mode === 'offline' ? 'offline' : 'online';
       const stars = st.intent || d.assess.intentStars || 3;
-      const tier = stars >= 4 ? 'High' : stars === 3 ? 'Medium' : 'Low';
       const planCards = PLANS.map(p => {
         const pr = planPrice(p, mode, stars);
-        const price = pr.disc > 0 ? `${inr(pr.now)}<span class="o-price">${inr(pr.base)}</span>` : inr(pr.base);
-        return `<div class="plan-card ${st.plan === p.key ? 'sel' : ''}" data-cp="plan" data-val="${p.key}"><h4>${p.name}</h4><div class="price">${price}</div></div>`;
+        const price = pr.disc > 0 ? `${inr(pr.now)} <span class="o-price">${inr(pr.base)}</span>` : inr(pr.base);
+        const feats = p.includes.map(x => `<li>${x}</li>`).join('');
+        return `<div class="plan-card ${st.plan === p.key ? 'sel' : ''}" data-cp="plan" data-val="${p.key}"><h4>${p.name}</h4><div class="price">${price}</div><ul class="plan-feats">${feats}</ul></div>`;
       }).join('');
       const addonCards = ADDONS.map(a => `<div class="addon-card ${st.addons.includes(a.key) ? 'sel' : ''}" data-cp="addon" data-val="${a.key}"><div class="a-t">${a.name}</div><div class="a-p">+${inr(a.price)}</div></div>`).join('');
-      const tot = bookingTotal(st, mode, stars);
-      const totalHTML = st.plan ? `
-        <div class="book-total">
-          <div class="bt-row"><span>${PLANS.find(p => p.key === st.plan).name} plan</span><span>${inr(tot.plan)}</span></div>
-          ${st.addons.map(k => { const a = ADDONS.find(x => x.key === k); return `<div class="bt-row"><span>${a.name}</span><span>+${inr(a.price)}</span></div>`; }).join('')}
-          <div class="bt-row total"><span>Booking total</span><span>${inr(tot.total)}</span></div>
-        </div>` : `<div class="aempty">Select a plan to see the booking total.</div>`;
-      return `
-        <div class="cp-sec-label">Subscription Plan · priced for ${tier} intent · selected turns green</div>
+      return `<div class="cp-da-label">Plans — read out what each includes, tap the one they choose</div>
         <div class="plan-grid">${planCards}</div>
-        <div class="cp-sec-label">Add-ons — total updates as the customer agrees</div>
-        <div class="plan-grid">${addonCards}</div>
-        <div class="cp-sec-label">Finalised booking price</div>
-        ${totalHTML}`;
+        <div class="cp-da-label">Add-ons</div>
+        <div class="addon-row">${addonCards}</div>`;
     }
 
-    function stepBook(d, st) {
+    function bookDecision(d, st) {
       const blr = isBLR(d);
-      if (!blr && !st.mode) st.mode = 'online';
       const mode = st.mode || (blr ? null : 'online');
       const modeBlock = blr
-        ? `<div class="cp-sec-label">Subscription · Bengaluru → ask online or offline</div>
-           <div class="capsules">
-             <button type="button" class="capsule ${st.mode === 'online' ? 'active' : ''}" data-cp="mode" data-val="online">Online</button>
-             <button type="button" class="capsule ${st.mode === 'offline' ? 'active' : ''}" data-cp="mode" data-val="offline">Offline</button>
-           </div>`
-        : `<div class="cp-sec-label">Subscription · outside Bengaluru → Online only</div>
-           <div class="route-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg><span>Location is <b>${d.capture.location || '—'}</b> — only <b>Online</b> plans are offered here.</span></div>`;
-      const trialBlock = `<div class="cp-sec-label">Trial Type · as the customer decides</div>
-        ${mode === 'offline'
-          ? `<div class="capsules"><button type="button" class="capsule ${st.trial === 'online' ? 'active' : ''}" data-cp="trial" data-val="online">Online Trial</button><button type="button" class="capsule ${st.trial === 'offline' ? 'active' : ''}" data-cp="trial" data-val="offline">Offline Trial</button></div>`
-          : `<div class="capsules"><button type="button" class="capsule active" disabled>Online Trial</button></div>`}`;
-      const oc = (key, t, dsc, cls) => `<button type="button" class="oc-btn ${cls || ''} ${st.payment === key ? 'active' : ''}" data-cp="pay" data-val="${key}"><span class="oc-t">${t}</span><span class="oc-d">${dsc}</span></button>`;
-      const outcomeBlock = `<div class="cp-sec-label">Outcome — what did the customer decide?</div>
-        <div class="outcome-grid">
-          ${oc('convert', 'Paying Now · Convert', 'Full subscription paid → client created.')}
-          ${oc('session', '₹1,000 Single Session', 'Book one paid session with the FSE.')}
-          ${oc('assess', 'Free Assessment', 'Book a free assessment → FSE.')}
-          ${oc('denies', 'Not Converted', 'Customer declined everything.', 'warn')}
-        </div>`;
-      const needsSlot = st.payment === 'session' || st.payment === 'assess';
-      const physioOpts = [`<option value="" disabled ${st.physio ? '' : 'selected'}>Select physio…</option>`].concat(PHYSIOS.map(p => `<option ${st.physio === p ? 'selected' : ''}>${p}</option>`)).join('');
-      const timeOpts = [`<option value="" disabled ${st.slot ? '' : 'selected'}>Select a time slot…</option>`].concat(FSE_TIMES.map(s => `<option ${st.slot === s ? 'selected' : ''}>${s}</option>`)).join('');
-      let resultBlock = '';
-      if (st.payment === 'convert') resultBlock = `<div class="result ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><div><b>Client profile created · Converted</b><span>Full payment collected — onboarding begins.</span></div></div>`;
-      else if (needsSlot) resultBlock = `
-        <div class="cp-sec-label">Ask the date, then read out FSE &amp; physio slots</div>
-        <input type="date" class="form-input" data-cp="date" value="${st.date || ''}" style="width:100%;height:38px;margin-bottom:10px" />
-        <select class="form-input" data-cp="physio" style="width:100%;height:38px;margin-bottom:10px">${physioOpts}</select>
-        <select class="form-input" data-cp="slot" style="width:100%;height:38px">${timeOpts}</select>`;
-      else if (st.payment === 'denies') resultBlock = `<div class="result bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg><div><b>Not Converted</b><span>Moves to the Not Converted section.</span></div></div>`;
-      return `${modeBlock}${trialBlock}${outcomeBlock}${resultBlock}`;
+        ? `<div class="cp-da-label">Mode · Bengaluru → ask online or offline</div>
+           <div class="capsules"><button type="button" class="capsule ${st.mode === 'online' ? 'active' : ''}" data-cp="mode" data-val="online">Online</button><button type="button" class="capsule ${st.mode === 'offline' ? 'active' : ''}" data-cp="mode" data-val="offline">Offline</button></div>`
+        : `<div class="cp-da-label">Mode · ${d.capture.location || 'outside Bengaluru'} → Online only</div>
+           <div class="capsules"><button type="button" class="capsule active" disabled>Online</button></div>`;
+      const trialBlock = `<div class="cp-da-label">Assessment type</div>${mode === 'offline'
+        ? `<div class="capsules"><button type="button" class="capsule ${st.trial === 'online' ? 'active' : ''}" data-cp="trial" data-val="online">Online Assessment</button><button type="button" class="capsule ${st.trial === 'offline' ? 'active' : ''}" data-cp="trial" data-val="offline">In-Person Assessment</button></div>`
+        : `<div class="capsules"><button type="button" class="capsule active" disabled>Online Assessment</button></div>`}`;
+      const oc = (k, t, dsc, cls) => `<button type="button" class="oc-btn ${cls || ''} ${st.payment === k ? 'active' : ''}" data-cp="pay" data-val="${k}"><span class="oc-t">${t}</span><span class="oc-d">${dsc}</span></button>`;
+      const outcomeBlock = `<div class="cp-da-label">Outcome — did they agree to the assessment?</div>
+        <div class="outcome-grid">${oc('assess', 'Free Assessment', 'Book the free assessment → FSE.')}${oc('session', '₹1,000 Paid Assessment', 'Book a paid assessment session → FSE.')}${oc('denies', 'Not Interested', 'Declined the assessment.', 'warn')}</div>`;
+      let slotBlock = '';
+      if (st.payment === 'session' || st.payment === 'assess') {
+        const physioOpts = [`<option value="" disabled ${st.physio ? '' : 'selected'}>Select physio…</option>`].concat(PHYSIOS.map(p => `<option ${st.physio === p ? 'selected' : ''}>${p}</option>`)).join('');
+        const timeOpts = [`<option value="" disabled ${st.slot ? '' : 'selected'}>Select a time slot…</option>`].concat(FSE_TIMES.map(s => `<option ${st.slot === s ? 'selected' : ''}>${s}</option>`)).join('');
+        slotBlock = `<div class="cp-da-label">Date, physio &amp; assessment slot</div>
+          <div class="slot-grid"><input type="date" class="form-input" data-cp="date" value="${st.date || ''}"><select class="form-input" data-cp="physio">${physioOpts}</select><select class="form-input" data-cp="slot">${timeOpts}</select></div>`;
+      }
+      return `${modeBlock}${trialBlock}${outcomeBlock}${slotBlock}`;
     }
 
-    function stepSummary(d, st) {
-      const onbDone = ONBOARDING.filter((s, i) => st.caps['pt-subs-' + i]).length;
-      const planName = st.plan ? PLANS.find(p => p.key === st.plan).name : '—';
-      const outTxt = { convert: 'Converted (paid)', session: '₹1,000 session booked', assess: 'Free assessment booked', denies: 'Not converted' }[st.payment] || 'Pending';
-      const client = [
-        `Pain points: ${d.assess.painPoints.map(p => p.t).join(', ') || '—'}`,
-        `Goals: ${d.assess.goals.join(', ') || '—'}`,
-        `Intent: ${st.intent}/5 — ${d.ai.intentSummary}`,
-        `Preference: ${st.mode ? (st.mode === 'online' ? 'Online' : 'Offline') + (st.trial ? ` · ${st.trial} trial` : '') : '—'}`
-      ];
-      const rep = [
-        `Onboarding explained: ${onbDone}/7${onbDone < 7 ? ` · ${7 - onbDone} missed` : ''}`,
-        `Pitched: ${planName}${st.addons.length ? ` + ${st.addons.map(k => ADDONS.find(a => a.key === k).name).join(', ')}` : ''}`,
-        `Outcome: ${outTxt}`,
-        (st.physio && st.slot) ? `Booked: ${st.physio} · ${st.date || ''} ${st.slot}` : ''
-      ].filter(Boolean);
-      const labelReminder = st.label
-        ? `<div class="done-chip">Call Type Label: <b>${st.label}</b> ✓</div>`
-        : `<div class="route-note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Reminder — you haven’t set the <b>Call Type Label</b>. Set it before ending:</span></div>
-           <div class="capsules" style="margin-top:8px">${['Label 1', 'Label 2', 'Label 3'].map(l => `<button type="button" class="capsule ${st.label === l ? 'active' : ''}" data-cp="label" data-val="${l}">${l}</button>`).join('')}</div>`;
-      return `
-        <div class="cp-sec-label">AI Call Summary · Customer</div>
-        <div class="captured-text">${client.map(l => `• ${l}`).join('<br>')}</div>
-        <div class="cp-sec-label">AI Call Summary · Sales Rep</div>
-        <div class="captured-text">${rep.map(l => `• ${l}`).join('<br>')}</div>
-        <div class="cp-sec-label">Call Type Label ${st.label ? '· set' : '· not set'}</div>
-        ${labelReminder}`;
-    }
-
-    function pageSummary(d, st, cfg) {
-      if (cfg.key === 'details') { const done = CAPTURE_FIELDS.filter(f => st.captureDone[f.key]).length; return `Profile confirmed — 6 fields on file, ${done}/${CAPTURE_FIELDS.length} new details captured on the call.`; }
-      if (cfg.key === 'intent') return st.assessReady ? `${d.assess.painPoints.length} pain point(s) rated · intent ${st.intent}/5. ${d.ai.intentSummary}` : 'Analysing the conversation…';
-      if (cfg.key === 'subs') { const onbDone = ONBOARDING.filter((s, i) => st.caps['pt-subs-' + i]).length; return `Onboarding ${onbDone}/7 explained. ${st.plan ? `Pitched ${PLANS.find(p => p.key === st.plan).name}` : 'No plan selected yet'}${st.addons.length ? ` + ${st.addons.length} add-on(s)` : ''}.`; }
-      if (cfg.key === 'book') return `${st.mode ? (st.mode === 'online' ? 'Online' : 'Offline') : 'Mode pending'}${st.trial ? ` · ${st.trial} trial` : ''}. Outcome: ${st.payment || 'pending'}.`;
+    function decisionInner(d, st) {
+      const ak = activeKey(st);
+      if (ak === 'subs') return subsDecision(d, st);
+      if (ak === 'book') return bookDecision(d, st);
       return '';
     }
 
-    function cockpitStep(d, st, cfg) {
-      let body = '';
-      if (cfg.key === 'details') body = stepDetails(d, st);
-      else if (cfg.key === 'intent') body = stepIntent(d, st);
-      else if (cfg.key === 'subs') body = stepSubs(d, st);
-      else if (cfg.key === 'book') body = stepBook(d, st);
-      else if (cfg.key === 'summary') body = stepSummary(d, st);
-      return body;
+    // Pinned reminder at the foot of the hero — must-dos before the call is marked ended.
+    function remindInner(d, st) {
+      const chip = (on, txt) => `<span class="rm-chip ${on ? 'on' : ''}">${on ? '✓' : '•'} ${txt}</span>`;
+      const labels = ['Label 1', 'Label 2', 'Label 3'].map(l => `<button type="button" class="capsule sm ${st.label === l ? 'active' : ''}" data-cp="label" data-val="${l}">${l}</button>`).join('');
+      const nag = st._nag && !callReady(d, st) ? `<div class="rm-nag">Pick an outcome and a call-type label to mark the call ended.</div>` : '';
+      return `<div class="rm-head">📌 Before you mark the call ended</div>
+        <div class="rm-chips">${chip(!!st.payment, 'Confirm the outcome')}${chip(!!st.label, 'Set the call-type label')}</div>
+        <div class="rm-labels">${labels}</div>${nag}`;
     }
 
-    function cockpitSide(d, st, cfg) {
-      const first = d.name.split(' ')[0];
-      const sayLines = cfg.say.map((s, i) => `<div class="cp-say" style="animation-delay:${(i * 0.06).toFixed(2)}s"><span class="say-lead">AI · say this</span>${s.replace('{first}', first)}</div>`).join('');
-      let decide = '';
-      if (cfg.key === 'details') decide = `AI is building <b>${d.name}</b>’s profile from the conversation…`;
-      else if (cfg.key === 'intent') decide = st.assessReady ? `Intent <b>${st.intent}/5</b>. ${d.ai.intentSummary}${d.ai.langGap ? ' ⚠ Possible <b>language gap</b>.' : ''}` : 'AI is analysing pain points, goals & intent…';
-      else if (cfg.key === 'subs') { const onbDone = ONBOARDING.filter((s, i) => st.caps['pt-subs-' + i]).length; decide = `Onboarding <b>${onbDone}/7</b> explained.${st.plan ? ` Recommending <b>${PLANS.find(p => p.key === st.plan).name}</b>${st.addons.length ? ` + ${st.addons.length} add-on(s)` : ''}.` : ' Pick the plan that fits.'}`; }
-      else if (cfg.key === 'book') decide = st.payment ? `Outcome: <b>${{ convert: 'Converted', session: '₹1,000 session', assess: 'Free assessment', denies: 'Not converted' }[st.payment]}</b>.${(st.payment === 'session' || st.payment === 'assess') ? ' Read out the FSE slot & physio.' : ''}` : `${isBLR(d) ? 'Bengaluru → offer online or offline.' : 'Outside Bengaluru → online only.'} Then set the outcome.`;
-      else decide = 'Review the AI call summary, then end the call to save & route the lead.';
-      return `
-        <aside class="cp-side">
-          <div class="cp-side-head">
-            <div class="cp-ai-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg></div>
-            <div><div class="t">AI Co-Pilot</div><div class="cp-listening"><span class="ld"></span>Listening to the call…</div></div>
-          </div>
-          <div class="cp-feed">
-            ${sayLines}
-            <div class="cp-decide">${decide}</div>
-            <div id="cpNotes">${cpNotesHTML(st, cfg, d)}</div>
-          </div>
-        </aside>`;
-    }
-
-    // Whether the current step lets you advance.
-    function canNext(d, st, step) {
-      const cfg = CP_STEPS[step - 1];
-      if (cfg.key === 'book') {
-        if (!st.payment) return false;
-        const mode = st.mode || (isBLR(d) ? null : 'online');
-        if (st.payment === 'denies') return true;
-        if (st.payment === 'convert') return !!mode;
-        return !!mode && (mode === 'online' || st.trial) && !!st.physio && !!st.slot && !!st.date;
-      }
-      return true;
-    }
-    function cockpitFinishBtn(d, st) {
-      const lbl = st.payment === 'convert' ? 'End Call · Create Client' : st.payment === 'denies' ? 'End Call · Not Converted' : (st.payment === 'session' || st.payment === 'assess') ? 'End Call · Transfer to FSE' : 'End Call & Save';
-      return `<button type="button" class="btn-primary" data-cp="finish">${lbl}</button>`;
-    }
-
-    // Center — the AI prompter: surfaces the next point to say, + difficult-term guidance.
-    // Build the inner of the "say this next" block (also used by the flow timer to update live).
-    function promptNowInner(pts, cur) {
-      if (cur === -1) return `<span class="pn-lead">All points covered ✓</span><div class="pn-text">Every point on this page is covered.</div>`;
-      return `<span class="pn-lead"><span class="pn-live"></span>AI · say this next</span><div class="pn-text">${pts[cur]}</div>${pts[cur + 1] ? `<div class="pn-up">Up next: ${pts[cur + 1]}</div>` : ''}`;
-    }
-    function promptCenter(d, st, cfg) {
-      const pts = CP_POINTS[cfg.key] || [];
-      const cur = pts.findIndex((p, i) => !st.caps['pt-' + cfg.key + '-' + i]);
-      const hint = st.termHint;
-      const hintCard = hint
-        ? `<div class="cp-hint" id="cpHint"><span class="hint-lead">💡 Heard “${hint.term}” — say this</span>${hint.text}</div>`
-        : `<div class="cp-hint empty" id="cpHint"></div>`;
-      return `
-        <div class="cp-prompt">
-          <div class="cp-prompt-head">
-            <div class="cp-ai-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg></div>
-            <div><div class="t">AI Co-Pilot</div><div class="cp-listening"><span class="ld"></span>Listening — ticking points off as you say them</div></div>
-          </div>
-          ${hintCard}
-          <div class="prompt-now ${cur === -1 ? 'done' : ''}" id="cpNow">${promptNowInner(pts, cur)}</div>
-        </div>`;
-    }
-
-    // Right — the points to cover; the AI ticks them as they’re said. Active point flows down.
-    function pointsList(d, st, cfg) {
-      const pts = CP_POINTS[cfg.key] || [];
-      const left = !!st.pageLeft[cfg.key];
-      const cur = pts.findIndex((p, i) => !st.caps['pt-' + cfg.key + '-' + i]);
-      const covered = pts.filter((p, i) => st.caps['pt-' + cfg.key + '-' + i]).length;
-      const rows = pts.map((p, i) => {
-        const on = !!st.caps['pt-' + cfg.key + '-' + i], missed = !on && left;
-        const cls = on ? 'got' : missed ? 'miss' : i === cur ? 'now' : '';
-        const mark = on ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>' : missed ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>' : (i + 1);
-        return `<div class="pt-row ${cls}" data-cp="pt" data-val="${i}" data-pt="${i}"><span class="pt-ck">${mark}</span><span class="pt-t">${p}</span></div>`;
-      }).join('');
-      return `
-        <aside class="cp-points">
-          <div class="cp-points-head">Points to cover<span class="pt-count" id="cpPtCount">${covered}/${pts.length}</span></div>
-          <div class="pt-list">${rows}</div>
-        </aside>`;
-    }
-
-    // Bottom — a clean note-add block, pinned below and persistent across pages.
+    // Bottom — a clean note-add block, pinned below and persistent through the call.
     function notesPad(st) {
       return `
         <div class="cp-pad">
-          <div class="cp-pad-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Notes<span class="pad-sub">stays with you across pages</span></div>
+          <div class="cp-pad-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Notes<span class="pad-sub">stays with the call</span></div>
           <textarea class="cp-pad-ta" data-note="pad" placeholder="Add a note — mention a condition like “arthritis” and the AI will help…">${st.notes.pad || ''}</textarea>
         </div>`;
     }
 
     function cockpitHTML(d, st) {
-      const step = st.callStep, cfg = CP_STEPS[step - 1];
-      const pills = CP_STEPS.map((s, i) => { const n = i + 1, cls = n < step ? 'done' : n === step ? 'active' : ''; return `<span class="cp-step-pill ${cls}">${n}. ${s.title}</span>`; }).join('');
-      const dots = CP_STEPS.map((s, i) => `<span class="cp-dot ${i + 1 < step ? 'done' : i + 1 === step ? 'active' : ''}"></span>`).join('');
+      const hint = st.termHint;
+      const hintCard = hint
+        ? `<div class="cp-hint" id="cpHint"><span class="hint-lead">💡 Heard “${hint.term}” — say this</span>${hint.text}</div>`
+        : `<div class="cp-hint empty" id="cpHint"></div>`;
       return `
         <div class="cp-top">
-          <span class="cp-rec"><span class="rdot"></span>REC</span>
           <div class="cp-who"><span class="nm">${d.name}</span><span class="ph">${d.phone}</span></div>
-          <div class="cp-steps">${pills}</div>
           <div class="cp-spacer"></div>
-          <span class="cp-timer" id="cpTimer">0:00</span>
-          <button type="button" class="cp-later" data-cp="calllater"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/></svg>Call Later</button>
-          <button type="button" class="cp-end" data-cp="end"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>End Call</button>
+          <span class="cp-rectimer"><span class="rdot"></span><span id="cpTimer">0:00</span></span>
+          <button type="button" class="cp-ended" data-cp="callended">Call Ended</button>
         </div>
-        <div class="cp-body3">
-          <div class="cp-center">
-            ${promptCenter(d, st, cfg)}
-            <div class="cp-page">${cockpitStep(d, st, cfg)}</div>
+        <div class="cp-body2">
+          ${sectionCards(d, st)}
+          <div class="cp-center2">
+            <div class="cp-hero">
+              ${hintCard}
+              <div class="cp-prompter" id="cpPrompter">${prompterInner(d, st)}</div>
+              <div class="cp-decision" id="cpDecision">${decisionInner(d, st)}</div>
+              <div class="cp-remind${st._nag && !callReady(d, st) ? ' nag' : ''}" id="cpRemind">${remindInner(d, st)}</div>
+            </div>
+            <div class="cp-srcrow">
+              <span class="src-cell"><span class="src-l">Lead Source</span><span class="src-v">${d.source}</span></span>
+              <span class="src-cell"><span class="src-l">Booked Via</span><span class="src-v">${d.bookedVia}</span></span>
+            </div>
+            <div class="cp-recorded-wrap">
+              <div class="cp-rec-head">Info as Recorded</div>
+              <div class="cp-recorded" id="cpRecorded">${recordedInner(d, st)}</div>
+            </div>
           </div>
-          ${pointsList(d, st, cfg)}
         </div>
-        ${notesPad(st)}
-        <div class="cp-foot">
-          <div class="cp-dots">${dots}</div>
-          <div class="cp-spacer"></div>
-          ${step > 1 ? `<button type="button" class="btn-ghost" data-cp="back">Back</button>` : ''}
-          ${step < 5 ? `<button type="button" class="btn-primary" data-cp="next" ${canNext(d, st, step) ? '' : 'disabled'}>Next</button>` : cockpitFinishBtn(d, st)}
-        </div>`;
+        ${notesPad(st)}`;
     }
 
     function finishCockpit(d, st) {
@@ -2470,19 +3078,13 @@
         const b = e.target.closest('[data-cp]'); if (!b) return;
         const st = ls(cockpitId), d = LEADS.find(x => x.booking === cockpitId);
         const act = b.dataset.cp, val = b.dataset.val;
-        if (act === 'end') { st.stage = 'new'; closeCockpit(); rerenderLeads(); }
-        else if (act === 'calllater') { st.stage = 'done'; st.outcome = 'followup'; addReminder(d, 'followup', 'Customer asked to be called later — follow-up scheduled.'); closeCockpit(); rerenderLeads(); }
-        else if (act === 'back') { st.callStep = Math.max(1, st.callStep - 1); renderCockpit(); }
-        else if (act === 'next') { if (!canNext(d, st, st.callStep)) return; st.pageLeft[CP_STEPS[st.callStep - 1].key] = true; st.callStep = Math.min(5, st.callStep + 1); renderCockpit(); }
+        if (act === 'callended') { if (!callReady(d, st)) { st._nag = true; renderCockpit(); return; } finishCockpit(d, st); }
         else if (act === 'mode') { st.mode = val; if (val === 'online') st.trial = null; renderCockpit(); }
         else if (act === 'trial') { st.trial = val; renderCockpit(); }
         else if (act === 'plan') { st.plan = val; renderCockpit(); }
         else if (act === 'addon') { const i = st.addons.indexOf(val); if (i >= 0) st.addons.splice(i, 1); else st.addons.push(val); renderCockpit(); }
-        else if (act === 'pt') { const k = 'pt-' + CP_STEPS[st.callStep - 1].key + '-' + val; st.caps[k] = !st.caps[k]; renderCockpit(); }
         else if (act === 'label') { st.label = (st.label === val) ? null : val; renderCockpit(); }
-        else if (act === 'intent') { st.intent = Number(val); renderCockpit(); }
         else if (act === 'pay') { st.payment = val; renderCockpit(); }
-        else if (act === 'finish') { finishCockpit(d, st); }
       });
       overlay.addEventListener('change', (e) => {
         const st = ls(cockpitId);
@@ -2495,6 +3097,155 @@
         const st = ls(cockpitId);
         st.notes[e.target.dataset.note] = e.target.value;
         if (e.target.dataset.note === 'pad') detectTerm(st, e.target.value);
+      });
+    }
+
+    // ================= FSE call (no AI) — Write PPT briefing · notes · profile label =================
+    let fseCallId = null, fseStart = 0, fseTimer = null;
+    const fseLeadOf = (id) => LEADS.find(x => x.booking === id);
+
+    function openFseCall(id) {
+      fseCallId = id; fseStart = Date.now();
+      const st = ls(id); st.fseNotes = st.fseNotes || '';
+      let o = document.getElementById('fseCall');
+      if (!o) { o = document.createElement('div'); o.id = 'fseCall'; document.body.appendChild(o); bindFseCall(o); }
+      renderFseCall();
+      clearInterval(fseTimer);
+      fseTimer = setInterval(() => { const t = document.getElementById('fseTimer'); if (t) t.textContent = fmtTime(Math.floor((Date.now() - fseStart) / 1000)); }, 1000);
+    }
+    function closeFseCall() { clearInterval(fseTimer); fseTimer = null; closePpt(); const o = document.getElementById('fseCall'); if (o) o.remove(); fseCallId = null; }
+    function endFseCall() { const st = ls(fseCallId); st.fseCallDone = true; closeFseCall(); setLeadsTab('fse'); }
+
+    function renderFseCall() {
+      const d = fseLeadOf(fseCallId), o = document.getElementById('fseCall');
+      if (!d || !o) return;
+      const v = fseView(d), st = v.st, offline = v.fseType === 'offline-trial';
+      const pp = v.assess.painPoints.map(p => `${p.t} (${p.s}/5)`).join(', ') || '—';
+      const goals = v.assess.goals.join(', ') || '—';
+      const labels = ['Label 1', 'Label 2', 'Label 3'].map(l =>
+        `<button type="button" class="capsule ${st.fseLabel === l ? 'active' : ''}" data-fse="label" data-val="${l}">${l}</button>`).join('');
+      const heading = offline ? 'Offline trial → conversion call' : (v.fseType === 'online-trial' ? 'Online trial call' : 'FSE call');
+      o.className = 'cockpit';
+      o.innerHTML = `
+        <div class="cp-top">
+          <div class="cp-who"><span class="nm">${v.name}</span><span class="ph">${v.phone} · ${v.campaignName}</span></div>
+          <div class="cp-spacer"></div>
+          <span class="cp-rectimer"><span class="rdot"></span><span id="fseTimer">0:00</span></span>
+          <button type="button" class="cp-ended" data-fse="end">End Call</button>
+        </div>
+        <div class="fse-call-body">
+          <div class="fse-call-inner">
+            <div class="fse-call-h">${heading}</div>
+            <div class="fse-call-sub">${FSE_TYPE_LABEL[v.fseType]} · ${offline ? (v.trialSession || v.bookedTime) : v.bookedTime}${v.physio ? ' · ' + v.physio : ''}</div>
+
+            <button type="button" class="fse-ppt-btn" data-fse="ppt">
+              <span class="ppt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+              <span class="ppt-txt"><b>Write PPT</b><span>Auto-generated briefing deck from ${v.name.split(' ')[0]}'s info — open to refer during the call</span></span>
+              <span class="ppt-go">Open ›</span>
+            </button>
+
+            <div class="fse-info-card">
+              <div class="fci-head">Client info</div>
+              <div class="pgrid">
+                ${dcell('Booking For', v.profile.bookingFor)}
+                ${dcell('Age & Gender', v.profile.ageGender)}
+                ${dcell('Location / Address', v.address || v.profile.location, true)}
+                ${dcell('Pain Points', pp, true)}
+                ${dcell('Goals', goals, true)}
+                ${dcell('Best Time', v.profile.contactTime)}
+              </div>
+              ${offline ? `<div class="fse-conv-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CLOCK2}</svg><span>Conversion call ${v.conversionCall || 'at the end of the session'} — offline trial → offline subscription.</span></div>` : ''}
+            </div>
+
+            <div class="fse-field">
+              <div class="field-label">Mark the client profile</div>
+              <div class="capsules">${labels}</div>
+            </div>
+
+            <div class="fse-field">
+              <div class="field-label">Notes</div>
+              <textarea class="fse-notes-ta" data-fse="notes" placeholder="Write notes about the client during the call…">${st.fseNotes || ''}</textarea>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function bindFseCall(o) {
+      o.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-fse]'); if (!b) return;
+        const st = ls(fseCallId), act = b.dataset.fse;
+        if (act === 'end') endFseCall();
+        else if (act === 'label') { st.fseLabel = (st.fseLabel === b.dataset.val) ? null : b.dataset.val; renderFseCall(); }
+        else if (act === 'ppt') openPpt(fseCallId);
+      });
+      o.addEventListener('input', (e) => { if (e.target.dataset.fse !== 'notes') return; ls(fseCallId).fseNotes = e.target.value; });
+    }
+
+    // ---- Write PPT — a customised briefing deck generated from the client's info ----
+    let pptIdx = 0;
+    function buildSlides(v) {
+      const offline = v.fseType === 'offline-trial';
+      const pp = v.assess.painPoints.length ? v.assess.painPoints.map(p => `${p.t} — severity ${p.s}/5`) : ['No specific pain points captured yet'];
+      const goals = v.assess.goals.length ? v.assess.goals : ['To be discovered on the call'];
+      const plan = offline ? 'Offline plan (centre-based)' : 'Online plan';
+      const path = offline
+        ? 'Run the offline trial, then convert to an <b>offline subscription</b> on the conversion call right after.'
+        : 'Run the trial assessment, then convert to an <b>online subscription</b> with a clear next session.';
+      const talking = [
+        `Open with their main concern: ${v.assess.painPoints[0] ? v.assess.painPoints[0].t : 'their goals'}.`,
+        `Tie the plan to their goal: ${goals[0]}.`,
+        'Reassure on safety — physio-designed, age-appropriate progression.',
+        offline ? 'Close on the offline subscription right after the trial.' : 'Close on the online subscription with a clear next session.'
+      ];
+      return [
+        { t: 'Client Briefing', big: v.name, lines: [`${FSE_TYPE_LABEL[v.fseType]} · ${v.campaignName}`, `${offline ? 'Offline trial' : 'FSE call'}: ${offline ? (v.trialSession || v.bookedTime) : v.bookedTime}`, v.physio ? `Physio: ${v.physio}` : ''] },
+        { t: 'Profile', lines: [`Booking for: ${v.profile.bookingFor}`, `Age & gender: ${v.profile.ageGender}`, `Location: ${v.address || v.profile.location}`, `Best time: ${v.profile.contactTime}`] },
+        { t: 'Pain Points & Conditions', lines: pp },
+        { t: 'Goals', lines: goals },
+        { t: 'Recommended Plan & Talking Points', lines: [`Suggested: <b>${plan}</b>`, ...talking] },
+        { t: 'Trial → Conversion Path', lines: [path] }
+      ];
+    }
+    function openPpt(id) { pptIdx = 0; let m = document.getElementById('pptModal'); if (!m) { m = document.createElement('div'); m.id = 'pptModal'; document.body.appendChild(m); bindPpt(m); } renderPpt(); }
+    function closePpt() { const m = document.getElementById('pptModal'); if (m) m.remove(); }
+    function renderPpt() {
+      const m = document.getElementById('pptModal'), d = fseLeadOf(fseCallId); if (!m || !d) return;
+      const v = fseView(d), slides = buildSlides(v), s = slides[pptIdx];
+      const dots = slides.map((_, i) => `<span class="ppt-dot ${i === pptIdx ? 'on' : ''}" data-ppt="go" data-i="${i}"></span>`).join('');
+      m.className = 'modal-overlay';
+      m.innerHTML = `
+        <div class="modal ppt-modal">
+          <div class="modal-head">
+            <span>Write PPT · ${v.name} <span class="ppt-auto">auto-generated</span></span>
+            <button type="button" class="modal-close" data-ppt="close">×</button>
+          </div>
+          <div class="modal-body ppt-body">
+            <div class="ppt-slide">
+              <div class="ppt-num">Slide ${pptIdx + 1} / ${slides.length}</div>
+              <div class="ppt-title">${s.t}</div>
+              ${s.big ? `<div class="ppt-big">${s.big}</div>` : ''}
+              <ul class="ppt-lines">${s.lines.filter(Boolean).map(l => `<li>${l}</li>`).join('')}</ul>
+            </div>
+          </div>
+          <div class="modal-foot ppt-foot">
+            <div class="ppt-dots">${dots}</div>
+            <div class="ppt-nav">
+              <button type="button" class="btn-ghost" data-ppt="prev" ${pptIdx === 0 ? 'disabled' : ''}>‹ Prev</button>
+              <button type="button" class="btn-primary" data-ppt="next">${pptIdx === slides.length - 1 ? 'Done' : 'Next ›'}</button>
+            </div>
+          </div>
+        </div>`;
+    }
+    function bindPpt(m) {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) { closePpt(); return; }
+        const b = e.target.closest('[data-ppt]'); if (!b) return;
+        const d = fseLeadOf(fseCallId); if (!d) return;
+        const slides = buildSlides(fseView(d)), act = b.dataset.ppt;
+        if (act === 'close') closePpt();
+        else if (act === 'prev') { if (pptIdx > 0) pptIdx--; renderPpt(); }
+        else if (act === 'next') { if (pptIdx < slides.length - 1) { pptIdx++; renderPpt(); } else closePpt(); }
+        else if (act === 'go') { pptIdx = Number(b.dataset.i); renderPpt(); }
       });
     }
 
@@ -2537,6 +3288,7 @@
     }
 
     workspace.addEventListener('click', handleLeadAction);
+    workspace.addEventListener('click', (e) => { const b = e.target.closest('[data-fsecall]'); if (b) openFseCall(b.dataset.fsecall); });
     workspace.addEventListener('change', (e) => {
       const card = e.target.closest('.lead-card2');
       if (!card) return;
