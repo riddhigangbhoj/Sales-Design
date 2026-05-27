@@ -1412,6 +1412,77 @@
     .reason-tag.pricing    { background: #fdf2e0; color: #b25e09; }
     .reason-tag.delay      { background: #fdeaea; color: #c0392b; }
     .loss-amt { font-size: 14px; font-weight: 800; color: #c0392b; width: 72px; text-align: right; flex-shrink: 0; }
+
+    /* ---------------- AI Alerts: filter + date-sort controls ---------------- */
+    .alerts-bar { flex-wrap: wrap; gap: 10px; }
+    .alerts-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .alert-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid var(--border); background: #fff;
+      color: var(--text); font-weight: 600; font-size: 12px;
+      padding: 6px 11px; border-radius: 8px; cursor: pointer; font-family: inherit;
+    }
+    .alert-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .alert-btn svg { width: 13px; height: 13px; stroke-width: 1.9; }
+    .alert-btn.on { background: var(--blue-soft); border-color: var(--blue-divider); color: var(--blue); }
+    .alert-btn.ghost { border-color: transparent; color: var(--text-muted); }
+    .alert-btn.ghost:hover { background: #f1f3f7; color: var(--text); }
+    .alert-date-input {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid var(--border); background: #fff;
+      padding: 4px 10px; border-radius: 8px; color: var(--text-muted);
+    }
+    .alert-date-input svg { width: 13px; height: 13px; stroke-width: 1.9; }
+    .alert-date-input input { border: none; outline: none; background: transparent; font-family: inherit; font-size: 12px; color: var(--text); }
+
+    .alerts-filter-panel {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+      padding: 12px 16px; background: #f7faff; border-bottom: 1px solid var(--border-soft);
+    }
+    .alerts-filter-panel .afp-lbl { font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+    .alerts-filter-panel .capsules { gap: 7px; }
+    .alert-chip { display: inline-flex; align-items: center; gap: 7px; }
+    .alert-chip .lbl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .alert-chip.active .lbl-dot { box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+
+    /* Per-line label tag + generated date */
+    .ai-line .ai-line-txt { flex: 1; }
+    .alert-label-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .alert-date { margin-left: auto; padding-left: 12px; font-size: 11.5px; font-weight: 600; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+
+    .lbl-0 { background: #e0f3f1; color: #0d9488; }
+    .lbl-1 { background: #e6f6ec; color: #1f8a4c; }
+    .lbl-2 { background: #eaf1fe; color: #2f6bf6; }
+    .lbl-3 { background: #fdf2e0; color: #b25e09; }
+    .lbl-4 { background: #fdeaea; color: #c0392b; }
+    .lbl-5 { background: #efe9fc; color: #6b3fc4; }
+    span.lbl-dot.lbl-0 { background: #0d9488; }
+    span.lbl-dot.lbl-1 { background: #1f8a4c; }
+    span.lbl-dot.lbl-2 { background: #2f6bf6; }
+    span.lbl-dot.lbl-3 { background: #b25e09; }
+    span.lbl-dot.lbl-4 { background: #c0392b; }
+    span.lbl-dot.lbl-5 { background: #6b3fc4; }
+
+    /* Leads tab: same filter/sort controls as AI Alerts */
+    .leads-section-head.leads-bar { justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .leads-section .alerts-filter-panel { border: 1px solid var(--border-soft); border-radius: 10px; margin-bottom: 14px; }
+    .lc-head .alert-label-tag { margin-left: auto; }
+
+    /* One-line AI call summary on each lead card (accent matches the label) */
+    .lead-ai-line {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 14px; border-top: 1px solid var(--border-soft);
+      border-left: 3px solid var(--blue);
+      background: #f7faff; font-size: 12px; color: #5e6f9e;
+    }
+    .lead-ai-line svg { width: 13px; height: 13px; color: var(--blue); flex-shrink: 0; }
+    .lead-ai-line .lai-lead { font-size: 9px; font-weight: 800; letter-spacing: .05em; color: var(--blue); background: var(--blue-soft); padding: 2px 6px; border-radius: 20px; flex-shrink: 0; }
+    .lead-ai-line .lai-txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .lead-ai-line.lbl-accent-1 { border-left-color: #1f8a4c; }
+    .lead-ai-line.lbl-accent-2 { border-left-color: #2f6bf6; }
+    .lead-ai-line.lbl-accent-3 { border-left-color: #b25e09; }
+    .lead-ai-line.lbl-accent-4 { border-left-color: #c0392b; }
+    .lead-ai-line.lbl-accent-5 { border-left-color: #6b3fc4; }
   </style>
 </head>
 <body>
@@ -1444,7 +1515,6 @@
         <a href="#" data-page="Call Analysis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Call Analysis</a>
         <a href="#" data-page="Universal OTP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Universal OTP</a>
         <a href="#" class="active" data-page="Sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg>Sales</a>
-        <a href="#" data-page="FSE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>FSE</a>
       </nav>
     </aside>
 
@@ -1557,26 +1627,81 @@
     //   inside-blr + phone only (no address)→ needs a sales call                   → Sales (pool 'sales')
     // Sales leads keep `capture`/`assess`/`ai` because the AI sales cockpit reads them.
     const LEADS = [
-      // ---------- SALES pool — inside Bangalore, phone only (no address) ----------
-      { pool: 'sales', name: 'Ananya Sharma', phone: '+91 98765 43210', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88231',
-        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', address: null, followUp: true,
-        followUpInfo: { count: 1, reason: 'Wanted trainer credentials before committing — re-engage with proof points & a slot.', assignee: 'Priya Nair · Sales' },
-        capture: { bookingFor: 'Self', ageGender: '34 · Female', location: 'Bengaluru (area not shared)', contactTime: 'Weekday evenings' },
+      // ---------- SALES pool — inside Bangalore, phone only (no full address) ----------
+      // `label` (0 = Fresh: no call done yet, no AI summary · 1–5 = post-assessment labels)
+      // and `date` (when the lead came in) drive the Leads filter/sort.
+      { pool: 'sales', label: 0, fresh: true, date: '2026-05-27', name: 'Ishaan Verma', phone: '+91 98863 20114', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88350',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', location: 'Bengaluru — BTM Layout', condition: 'Arthritis',
+        capture: { bookingFor: 'Self', ageGender: '52 · Male', location: 'Bengaluru — BTM Layout', contactTime: 'Evenings' },
+        assess: { painPoints: [{ t: 'Knee arthritis', s: 4 }], goals: ['Pain relief', 'Mobility'], intentStars: 3 },
+        ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Rohan Gupta', mode: 'online', trial: null,
+              conversion: { level: 'Medium', pct: 52 }, langGap: false, minInfo: true,
+              intentSummary: 'Arthritis enquiry (52M). Not called yet.', trialBooking: 'Not yet booked.' } },
+      { pool: 'sales', label: 0, fresh: true, date: '2026-05-27', name: 'Lakshmi Rao', phone: '+91 99458 71203', source: 'Google Ads', bookedVia: 'Website Form', campaign: 'CMP-2044', booking: 'BKG-88351',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Google — Back Pain', location: null, condition: 'Back pain',
+        capture: { bookingFor: 'Self', ageGender: '36 · Female', location: 'Bengaluru (area not shared)', contactTime: 'Afternoons' },
+        assess: { painPoints: [{ t: 'Lower-back pain', s: 3 }], goals: ['Pain-free sitting'], intentStars: 3 },
+        ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Karan Bhatia', mode: 'online', trial: null,
+              conversion: { level: 'Medium', pct: 50 }, langGap: false, minInfo: true,
+              intentSummary: 'Back-pain enquiry (36F). Not called yet.', trialBooking: 'Not yet booked.' } },
+      { pool: 'sales', label: 0, fresh: true, date: '2026-05-26', name: 'Dev Anand', phone: '+91 98209 65540', source: 'Instagram', bookedVia: 'WhatsApp', campaign: 'CMP-2045', booking: 'BKG-88352',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Instagram — Shoulder', location: 'Bengaluru — Marathahalli', condition: 'Frozen shoulder',
+        capture: { bookingFor: 'Self', ageGender: '49 · Male', location: 'Bengaluru — Marathahalli', contactTime: 'Mornings' },
+        assess: { painPoints: [{ t: 'Frozen shoulder', s: 3 }], goals: ['Range of motion'], intentStars: 3 },
+        ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Sneha Iyer', mode: 'online', trial: null,
+              conversion: { level: 'Medium', pct: 47 }, langGap: false, minInfo: true,
+              intentSummary: 'Frozen-shoulder enquiry (49M). Not called yet.', trialBooking: 'Not yet booked.' } },
+
+      { pool: 'sales', label: 1, date: '2026-05-27', name: 'Ananya Sharma', phone: '+91 98765 43210', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88231',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', location: 'Bengaluru — HSR Layout', condition: 'Knee pain',
+        capture: { bookingFor: 'Self', ageGender: '34 · Female', location: 'Bengaluru — HSR Layout', contactTime: 'Weekday evenings' },
         assess: { painPoints: [{ t: 'Right-knee pain', s: 4 }, { t: 'Stiffness after sitting', s: 3 }], goals: ['Pain-free mobility', 'Return to jogging'], intentStars: 4 },
-        ai: { decision: 'qualified', subs: ['High Intent', 'Ready for FSE Trial'], physio: 'Dr. Rohan Gupta', mode: 'online', trial: null,
+        ai: { decision: 'qualified', subs: ['High Intent', 'Ready for Trial'], physio: 'Dr. Rohan Gupta', mode: 'online', trial: null,
               conversion: { level: 'High', pct: 82 }, langGap: false, minInfo: true,
               intentSummary: 'Knee pain, booking for self (34F). Comfortable with online sessions, high intent to start a trial this week.',
               trialBooking: 'Online trial requested — wants a slot this week.' } },
-      { pool: 'sales', name: 'Sara Khan', phone: '+91 90042 33890', source: 'Instagram', bookedVia: 'WhatsApp', campaign: 'CMP-2045', booking: 'BKG-88261',
-        campaignType: 'inside-blr', campaignName: 'Inside BLR · Instagram — Diabetes Care', address: null, followUp: false,
+      { pool: 'sales', label: 2, date: '2026-05-26', name: 'Neha Pillai', phone: '+91 98800 31245', source: 'Google Ads', bookedVia: 'Website Form', campaign: 'CMP-2039', booking: 'BKG-88312',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Google — Senior Care', location: 'Bengaluru — Indiranagar', condition: 'Arthritis',
+        capture: { bookingFor: 'Parent (mother)', ageGender: '60 · Female', location: 'Bengaluru — Indiranagar', contactTime: 'Weekday afternoons' },
+        assess: { painPoints: [{ t: 'Knee stiffness (mother)', s: 3 }], goals: ['Daily mobility', 'Independence'], intentStars: 3 },
+        ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Sneha Iyer', mode: 'offline', trial: 'online',
+              conversion: { level: 'Medium', pct: 55 }, langGap: false, minInfo: true,
+              intentSummary: 'Enquiring for mother (60). Open to an online trial; wants to understand the programme first.',
+              trialBooking: 'Online trial — to be scheduled.' } },
+      { pool: 'sales', label: 3, date: '2026-05-24', name: 'Rohit Sinha', phone: '+91 99016 77820', source: 'Referral', bookedVia: 'Phone Enquiry', campaign: 'CMP-2044', booking: 'BKG-88320',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Referral — Back Pain', location: 'Bengaluru — Whitefield', condition: 'Back pain',
+        capture: { bookingFor: 'Self', ageGender: '38 · Male', location: 'Bengaluru — Whitefield', contactTime: 'Evenings' },
+        assess: { painPoints: [{ t: 'Lower-back pain (desk job)', s: 3 }], goals: ['Posture correction', 'Core strength'], intentStars: 3 },
+        ai: { decision: 'qualified', subs: ['Follow-up Needed'], physio: 'Dr. Karan Bhatia', mode: 'online', trial: null,
+              conversion: { level: 'Medium', pct: 48 }, langGap: false, minInfo: true,
+              intentSummary: 'Desk-job back pain (38M). Interested but wants to check timings — needs a follow-up.',
+              trialBooking: 'Pending — follow-up to confirm slot.' } },
+      { pool: 'sales', label: 5, date: '2026-05-22', name: 'Sara Khan', phone: '+91 90042 33890', source: 'Instagram', bookedVia: 'WhatsApp', campaign: 'CMP-2045', booking: 'BKG-88261',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Instagram — Diabetes Care', location: null, condition: 'Diabetes',
         capture: { bookingFor: 'Self', ageGender: '41 · Female', location: 'Bengaluru (area not shared)', contactTime: 'Late evenings' },
         assess: { painPoints: [{ t: 'Low energy / fatigue', s: 3 }, { t: 'Weight management', s: 3 }], goals: ['Diabetes management', 'Sustainable weight loss'], intentStars: 3 },
         ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Sneha Iyer', mode: 'offline', trial: 'online',
               conversion: { level: 'Medium', pct: 50 }, langGap: true, minInfo: true,
               intentSummary: 'Diabetes-management goal (41F). Strong regional-language preference — the sales rep could not communicate fully (language gap).',
               trialBooking: 'Online trial — awaiting slot confirmation.' } },
-      { pool: 'sales', name: 'Aditya Nair', phone: '+91 97401 77654', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88270',
-        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', address: null, followUp: false,
+      { pool: 'sales', label: 1, date: '2026-05-12', name: 'Farah Sheikh', phone: '+91 98452 90011', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88330',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', location: null, condition: 'Knee pain',
+        capture: { bookingFor: 'Self', ageGender: '45 · Female', location: 'Bengaluru (area not shared)', contactTime: 'Mornings' },
+        assess: { painPoints: [{ t: 'Knee pain on stairs', s: 4 }], goals: ['Pain-free stairs', 'Strength'], intentStars: 4 },
+        ai: { decision: 'qualified', subs: ['High Intent'], physio: 'Dr. Rohan Gupta', mode: 'online', trial: null,
+              conversion: { level: 'High', pct: 78 }, langGap: false, minInfo: true,
+              intentSummary: 'Knee pain on stairs (45F). High intent, ready to start — just needs a slot.',
+              trialBooking: 'Online trial requested.' } },
+      { pool: 'sales', label: 2, date: '2026-05-06', name: 'Manoj Gupta', phone: '+91 99720 14567', source: 'Google Ads', bookedVia: 'Website Form', campaign: 'CMP-2039', booking: 'BKG-88341',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Google — Senior Care', location: 'Bengaluru — Jayanagar', condition: 'Mobility / balance',
+        capture: { bookingFor: 'Parent (father)', ageGender: '67 · Male', location: 'Bengaluru — Jayanagar', contactTime: 'Weekday mornings' },
+        assess: { painPoints: [{ t: 'Reduced balance (father)', s: 3 }], goals: ['Fall prevention', 'Daily mobility'], intentStars: 2 },
+        ai: { decision: 'qualified', subs: ['Eligible & Interested'], physio: 'Dr. Divya Menon', mode: 'offline', trial: 'online',
+              conversion: { level: 'Medium', pct: 44 }, langGap: false, minInfo: true,
+              intentSummary: 'Enquiring for father (67). Cautious; call not started yet — reach out in the morning.',
+              trialBooking: 'Not yet booked.' } },
+      { pool: 'sales', label: 4, date: '2026-05-25', name: 'Aditya Nair', phone: '+91 97401 77654', source: 'Meta Ads', bookedVia: 'Missed-call', campaign: 'CMP-2041', booking: 'BKG-88270',
+        campaignType: 'inside-blr', campaignName: 'Inside BLR · Meta — Knee Pain', location: null, condition: 'Not specified',
         capture: { bookingFor: 'Self', ageGender: '—', location: '—', contactTime: '—' },
         assess: { painPoints: [], goals: [], intentStars: 1 },
         ai: { decision: 'disqualified', subs: ['Not Interested', 'Out of Budget'], physio: null, mode: null, trial: null,
@@ -1832,26 +1957,38 @@
       return `<div class="lc-foot"><div class="foot-row"><button type="button" class="btn-primary danger" data-act="route-disqualify">Confirm Disqualification</button>${rem}</div></div>`;
     }
 
-    function leadCard(d, withBadge) {
+    function leadCard(d) {
       const st = ls(d.booking);
       const head = `
         <div class="lc-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PERSON}</svg>
           <span class="lc-title">${d.name}</span>
-          ${withBadge ? followBadge(d) : ''}
-          ${statusPill(st, !withBadge)}
+          <span class="alert-label-tag lbl-${d.label}">${ALERT_LABELS[d.label].name}</span>
+          ${st.stage === 'new' ? '' : statusPill(st, false)}
         </div>`;
-      // Sales cards intentionally show name + number only — everything else is
-      // gathered by the AI on the call. Campaign is shown as a small sub-line.
+      // Card facts: name (above) · phone · lead date · condition · lead source · campaign name & id · location if provided.
       const info = `
         <div class="pgrid">
-          ${dcell('Phone Number', d.phone, true)}
-        </div>
-        <div class="sales-campaign">${d.campaignName}</div>`;
+          ${dcell('Phone Number', d.phone)}
+          ${dcell('Lead Date', fmtAlertDate(d.date))}
+          ${dcell('Condition', d.condition || '—')}
+          ${dcell('Lead Source', d.source)}
+          ${dcell('Campaign ID', d.campaign)}
+          ${d.location ? dcell('Location', d.location) : ''}
+          ${dcell('Campaign', d.campaignName, true)}
+        </div>`;
+      // One-line AI call summary (full text on hover). Fresh leads have no call yet → no summary.
+      const showAi = d.ai && d.ai.intentSummary && !(d.fresh && st.stage === 'new');
+      const aiSummary = showAi ? `
+        <div class="lead-ai-line lbl-accent-${d.label}" title="${d.ai.intentSummary.replace(/"/g, '&quot;')}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>
+          <span class="lai-lead">AI</span>
+          <span class="lai-txt">${d.ai.intentSummary}</span>
+        </div>` : '';
 
       let body = '', footer = '';
       if (st.stage === 'new') {
-        body = `<div class="card-hint pad">Phone-only lead (no address given). Start the sales call — the AI listens and captures the rest.</div>`;
+        body = '';
         footer = `<div class="lc-foot"><button type="button" class="btn-primary" data-act="start-call">Start Sales Call</button></div>`;
       } else if (st.stage === 'calling') {
         const ready = st.label && st.intent;
@@ -1881,7 +2018,7 @@
           tag = `<span class="moved-tag disq-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg>Not converted</span>`;
         } else if (st.outcome === 'fse') {
           chips = [lbl, intn, `Mode: <b>${modeTxt}</b>`, `Physio: <b>${st.physio}</b>`, `Slot: <b>${st.date || ''} ${st.slot}</b>`, conv];
-          tag = `<span class="moved-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Confirmed — transferred to FSE panel</span>`;
+          tag = `<span class="moved-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Trial booked &amp; confirmed</span>`;
         } else if (st.outcome === 'ai-call') {
           chips = [lbl, intn, `Flag: <b>Language gap</b>`, conv];
           tag = `<span class="moved-tag aicall-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>Rescheduled for AI call — see AI Alerts</span>`;
@@ -1901,26 +2038,27 @@
           : `<div class="lc-foot">${tag}</div>`;
       }
 
-      return `<div class="lead-card lead-card2" data-id="${d.booking}">${head}${info}${withBadge ? followUpBlock(d) : ''}${body}${footer}</div>`;
+      return `<div class="lead-card lead-card2" data-id="${d.booking}">${head}${info}${aiSummary}${body}${footer}</div>`;
     }
 
     function leadsTab() {
       const sales = LEADS.filter(d => d.pool === 'sales');
-      const fu = sales.filter(d => d.followUp);
+      // Filter + date-sort, then keep Fresh (un-called) leads pinned to the top.
+      const items = applyFilterSort(sales, leadCtl)
+        .sort((a, b) => (a.fresh === b.fresh) ? 0 : (a.fresh ? -1 : 1));
+      const cards = items.length
+        ? items.map(leadCard).join('')
+        : `<div class="aempty">No leads match these filters.</div>`;
       return `
         <div class="lead-tab">
-          <div class="ai-legend">
-            <span class="swatch"></span>
-            <span>Phone-only leads from <b>inside-Bangalore</b> campaigns (no address). Start the AI sales call to qualify &amp; book a trial.</span>
-          </div>
           <div class="leads-scroll">
             <section class="leads-section">
-              <div class="leads-section-head">At Least One Follow-Up Call Done <span class="sec-count">${fu.length}</span></div>
-              <div class="cards-2col">${fu.map(d => leadCard(d, true)).join('')}</div>
-            </section>
-            <section class="leads-section">
-              <div class="leads-section-head">Leads <span class="sec-count">${sales.length}</span></div>
-              <div class="cards-2col">${sales.map(d => leadCard(d, false)).join('')}</div>
+              <div class="leads-section-head leads-bar">
+                <span>Leads <span class="sec-count">${items.length}</span></span>
+                ${filterControls('lead', leadCtl, 'Show leads that came in on or after this date')}
+              </div>
+              ${filterPanel('lead', leadCtl)}
+              <div class="cards-2col">${cards}</div>
             </section>
           </div>
         </div>`;
@@ -2181,15 +2319,109 @@
     const ICON_USERPLUS = '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>';
     const ICON_CLOCK2 = '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/>';
 
-    function alertsTab() {
-      const aitem = (cls, icon, t, dsc, when) => `
-        <div class="aitem ${cls}">
-          <div class="ai-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${icon}</svg></div>
-          <div class="ai-main"><span class="ai-t">${t}</span><span class="ai-d">${dsc}</span></div>
-          ${when ? `<span class="ai-when">${when}</span>` : ''}
-        </div>`;
-      const list = (items, emptyTxt) => items.length ? `<div class="alist">${items.join('')}</div>` : `<div class="aempty">${emptyTxt}</div>`;
+    // AI Alerts — each carries a label (1–5) and the date it was generated, so the
+    // list can be filtered by label and sorted / filtered by generation date.
+    const ALERT_LABELS = {
+      0: { name: 'Fresh', sev: 'fresh' },   // leads with no call done yet — no AI summary
+      1: { name: 'Label 1', sev: 'green' },
+      2: { name: 'Label 2', sev: 'blue' },
+      3: { name: 'Label 3', sev: 'warn' },
+      4: { name: 'Label 4', sev: 'red' },
+      5: { name: 'Label 5', sev: 'purple' }
+    };
+    // Which label chips each scope shows: alerts use 1–5; leads also include Fresh (0).
+    const LABEL_KEYS = { alert: [1, 2, 3, 4, 5], lead: [0, 1, 2, 3, 4, 5] };
+    const AI_ALERTS = [
+      { label: 1, name: 'Ananya Sharma', pred: '82% likely to convert', act: 'prioritise — call today', date: '2026-05-27' },
+      { label: 1, name: 'Rahul Verma', pred: '76% likely to convert', act: 'send slot options now', date: '2026-05-19' },
+      { label: 2, name: 'Karthik Reddy', pred: 'call not started', act: 'call now before drop-off', date: '2026-05-26' },
+      { label: 2, name: 'Neha Kulkarni', pred: 'call not started', act: 'call now before drop-off', date: '2026-05-11' },
+      { label: 3, name: 'Vikram Rao', pred: 'follow-up overdue · 3 days', act: 'confirm trial slot & plan', date: '2026-05-24' },
+      { label: 3, name: 'Meera Joshi', pred: 'follow-up overdue · 2 days', act: 're-engage now', date: '2026-05-04' },
+      { label: 4, name: 'Aditya Nair', pred: '21% likely · intent 1/5', act: 'at risk — win-back or deprioritise', date: '2026-05-25' },
+      { label: 4, name: 'Rohan Shetty', pred: '38% likely · stalled', act: 'at risk — send a testimonial', date: '2026-04-30' },
+      { label: 5, name: 'Sara Khan', pred: 'language gap flagged', act: 'AI will call in their language & summarise', date: '2026-05-22' },
+      { label: 5, name: 'Priya Desai', pred: 'rescheduled for AI call', act: 'AI callback queued', date: '2026-05-09' }
+    ];
+    // Filter / sort state — one per scope ('alert' for AI Alerts, 'lead' for Leads).
+    // Both share the same label set (1–5), filter panel, and date sort/filter UI.
+    let alertCtl = { labels: [], sort: 'desc', date: '', panelOpen: false };
+    let leadCtl = { labels: [], sort: 'desc', date: '', panelOpen: false };
 
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const fmtAlertDate = (iso) => { const [y, m, d] = iso.split('-').map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+    const ICON_FILTER = '<path d="M3 4h18l-7 8v6l-4 2v-8z"/>';
+    const ICON_SORT = '<path d="M7 4v16M7 20l-3-3M7 20l3-3M14 7h7M14 12h5M14 17h3"/>';
+
+    // Filter (by label) + sort/filter (by date) — shared by AI Alerts and Leads.
+    function applyFilterSort(arr, ctl) {
+      const items = arr.filter(x =>
+        (ctl.labels.length === 0 || ctl.labels.includes(x.label)) &&
+        (!ctl.date || x.date >= ctl.date));
+      return items.slice().sort((a, b) => ctl.sort === 'desc' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+    }
+    function ctlFor(scope) { return scope === 'alert' ? alertCtl : leadCtl; }
+    function applyCtl(scope, action, val) {
+      const ctl = ctlFor(scope);
+      if (action === 'filter') ctl.panelOpen = !ctl.panelOpen;
+      else if (action === 'sort') ctl.sort = ctl.sort === 'desc' ? 'asc' : 'desc';
+      else if (action === 'cleardate') ctl.date = '';
+      else if (action === 'clearlabels') ctl.labels = [];
+      else if (action === 'date') ctl.date = val;
+      else if (action === 'label') { const n = Number(val), i = ctl.labels.indexOf(n); if (i >= 0) ctl.labels.splice(i, 1); else ctl.labels.push(n); }
+      setLeadsTab(scope === 'alert' ? 'alerts' : 'leads');
+    }
+    function filterControls(scope, ctl, dateTitle) {
+      const sortTxt = ctl.sort === 'desc' ? 'Date · Newest' : 'Date · Oldest';
+      const fcount = ctl.labels.length ? ` (${ctl.labels.length})` : '';
+      return `
+        <div class="alerts-controls">
+          <button type="button" class="alert-btn ${ctl.panelOpen || ctl.labels.length ? 'on' : ''}" data-fctl="${scope}:filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_FILTER}</svg>Filter${fcount}</button>
+          <button type="button" class="alert-btn" data-fctl="${scope}:sort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SORT}</svg>${sortTxt}</button>
+          <label class="alert-date-input" title="${dateTitle}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CLOCK2}</svg><input type="date" data-fctl="${scope}:date" value="${ctl.date}" min="2026-04-27" max="2026-05-27"></label>
+          ${ctl.date ? `<button type="button" class="alert-btn ghost" data-fctl="${scope}:cleardate">Clear date</button>` : ''}
+        </div>`;
+    }
+    function filterPanel(scope, ctl) {
+      if (!ctl.panelOpen) return '';
+      const chips = LABEL_KEYS[scope].map(n =>
+        `<button type="button" class="capsule sm alert-chip ${ctl.labels.includes(n) ? 'active' : ''}" data-fctl="${scope}:label" data-val="${n}"><span class="lbl-dot lbl-${n}"></span>${ALERT_LABELS[n].name}</button>`).join('');
+      return `
+        <div class="alerts-filter-panel">
+          <span class="afp-lbl">Filter by label — pick one or more</span>
+          <div class="capsules">${chips}</div>
+          ${ctl.labels.length ? `<button type="button" class="alert-btn ghost" data-fctl="${scope}:clearlabels">Clear</button>` : ''}
+        </div>`;
+    }
+
+    function aiAlertItemHTML(a) {
+      const L = ALERT_LABELS[a.label];
+      return `
+        <div class="ai-line sev-${L.sev}">
+          <span class="ai-dot"></span>
+          <span class="alert-label-tag lbl-${a.label}">${L.name}</span>
+          <span class="ai-line-txt"><b>${a.name}</b> · ${a.pred} — <span class="ai-act">${a.act}</span></span>
+          <span class="alert-date">${fmtAlertDate(a.date)}</span>
+        </div>`;
+    }
+
+    function aiAlertsSection() {
+      const items = applyFilterSort(AI_ALERTS, alertCtl);
+      const body = items.length
+        ? `<div class="ai-lines">${items.map(aiAlertItemHTML).join('')}</div>`
+        : `<div class="aempty">No alerts match these filters.</div>`;
+      return `
+        <section class="fse-section">
+          <div class="fse-section-head alerts-bar">
+            <span>AI Alerts (past 30 days) <span class="sec-count">${items.length}</span></span>
+            ${filterControls('alert', alertCtl, 'Show alerts generated on or after this date')}
+          </div>
+          ${filterPanel('alert', alertCtl)}
+          <div class="fse-section-body">${body}</div>
+        </section>`;
+    }
+
+    function alertsTab() {
       // Compact, narrow new-lead card — no "New" badge (every card here is new).
       const nlead = (name, source, phone) => `
         <div class="nlead">
@@ -2204,47 +2436,6 @@
         .map(d => nlead(d.name, d.source, d.phone));
       const newLeads = [...freshLeads, ...EXTRA_NEW.map(d => nlead(d.name, d.source, d.phone))];
 
-      // Pull leads that need a follow-up or were rescheduled (language-gap → AI call).
-      const reschedFollow = salesLeads.filter(d => d.followUp || d.ai.langGap).map(d =>
-        d.ai.langGap
-          ? aitem('purple', ICON_SPARK, `${d.name} — rescheduled for AI call`,
-              `Language gap flagged · ${d.source}. The AI will call back in the customer's language and summarise.`, 'Tomorrow · 11:00 AM')
-          : aitem('warn', ICON_CLOCK2, `${d.name} — follow-up`, d.followUpInfo.reason, 'Tomorrow · 11:00 AM'));
-      const followItems = [...reschedFollow, ...reminders.map(r =>
-        aitem('warn', ICON_CLOCK2, `${r.name}${r.type === 'manual' ? ' — manual reminder' : ''}`, r.note, r.when))];
-
-      // AI Alerts — proactive predictions the AI surfaces from the lead data.
-      const aline = (sev, name, pred, act) => `
-        <div class="ai-line sev-${sev}">
-          <span class="ai-dot"></span>
-          <span class="ai-line-txt"><b>${name}</b> · ${pred} — <span class="ai-act">${act}</span></span>
-        </div>`;
-      const alines = (items) => items.length ? `<div class="ai-lines">${items.join('')}</div>` : `<div class="aempty">No AI predictions right now — they appear here as leads come in.</div>`;
-
-      // Illustrative follow-up ages + short next actions (the mock has a count, not timestamps).
-      const overdue = {
-        'BKG-88231': { age: '2 days', act: 'send trainer proof points + a slot' },
-        'BKG-88240': { age: '3 days', act: 'confirm father’s trial slot & plan' }
-      };
-      const aiLines = [];
-      // High predicted conversion — prioritise
-      salesLeads.filter(d => ls(d.booking).stage === 'new' && d.ai.conversion.level === 'High' && !d.followUp)
-        .forEach(d => aiLines.push(aline('green', d.name, `${d.ai.conversion.pct}% likely to convert`, 'prioritise — call today')));
-      // Call not yet started
-      salesLeads.filter(d => ls(d.booking).stage === 'new' && !d.followUp && !d.ai.langGap && d.ai.conversion.level !== 'Low')
-        .forEach(d => aiLines.push(aline('blue', d.name, 'call not started', 'call now before drop-off')));
-      // Follow-up gone stale
-      salesLeads.filter(d => d.followUp).forEach(d => {
-        const o = overdue[d.booking] || { age: '2 days', act: 're-engage now' };
-        aiLines.push(aline('warn', d.name, `follow-up overdue ${o.age}`, o.act));
-      });
-      // At risk of dropping
-      salesLeads.filter(d => d.ai.conversion.level === 'Low')
-        .forEach(d => aiLines.push(aline('red', d.name, `${d.ai.conversion.pct}% likely · intent ${d.assess.intentStars}/5`, 'at risk — win-back or deprioritise')));
-      // Language-gap leads a rep has actually rescheduled to the AI
-      salesLeads.filter(d => ls(d.booking).outcome === 'ai-call')
-        .forEach(d => aiLines.push(aline('purple', d.name, 'rescheduled for AI call', 'AI will call in their language & summarise')));
-
       const section = (title, content) => `
         <section class="fse-section">
           <div class="fse-section-head">${title}</div>
@@ -2252,9 +2443,8 @@
         </section>`;
       return `
         <div class="fse-panel">
-          ${section("Today's New Leads", nlist(newLeads))}
-          ${section('Follow Up Reminder', list(followItems, 'No follow-up reminders yet — add one from a lead after the call.'))}
-          ${section('AI Alerts', alines(aiLines))}
+          ${section("Today's Fresh Leads", nlist(newLeads))}
+          ${aiAlertsSection()}
         </div>`;
     }
 
@@ -3067,10 +3257,10 @@
       st.stage = 'done';
       if (st.payment === 'convert') { st.outcome = 'converted'; closeCockpit(); rerenderLeads(); return; }
       if (st.payment === 'denies') { st.outcome = 'notconverted'; closeCockpit(); rerenderLeads(); return; }
-      // session / assess → transfer to FSE
+      // session / assess → trial booked
       st.outcome = 'fse';
       closeCockpit();
-      setPage(document.querySelector('.nav a[data-page="FSE"]'));
+      rerenderLeads();
     }
 
     function bindCockpit(overlay) {
@@ -3276,8 +3466,6 @@
       else if (act === 'confirm-move') {
         if (!st.mode || !st.physio || !st.slot || (st.mode === 'offline' && !st.trial)) return;
         st.stage = 'done'; st.outcome = 'fse';
-        setPage(document.querySelector('.nav a[data-page="FSE"]'));
-        return;
       }
       else if (act === 'route-ai-call') { st.stage = 'done'; st.outcome = 'ai-call'; }
       else if (act === 'route-followup') { st.stage = 'done'; st.outcome = 'followup'; addReminder(d, 'followup', followReason(d, st)); }
@@ -3289,7 +3477,18 @@
 
     workspace.addEventListener('click', handleLeadAction);
     workspace.addEventListener('click', (e) => { const b = e.target.closest('[data-fsecall]'); if (b) openFseCall(b.dataset.fsecall); });
+
+    // Shared filter / sort controls for AI Alerts and Leads (data-fctl="scope:action")
+    workspace.addEventListener('click', (e) => {
+      const f = e.target.closest('[data-fctl]');
+      if (!f) return;
+      const [scope, action] = f.dataset.fctl.split(':');
+      if (action === 'date') return;          // date is handled on change
+      applyCtl(scope, action, f.dataset.val);
+    });
     workspace.addEventListener('change', (e) => {
+      const f = e.target.closest('[data-fctl]');
+      if (f) { const [scope, action] = f.dataset.fctl.split(':'); if (action === 'date') { applyCtl(scope, action, e.target.value); return; } }
       const card = e.target.closest('.lead-card2');
       if (!card) return;
       const st = ls(card.dataset.id);
