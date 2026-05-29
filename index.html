@@ -99,6 +99,7 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
+      min-height: 0;
     }
 
     .topbar {
@@ -241,6 +242,7 @@
       flex: 1;
       display: flex;
       min-width: 0;
+      min-height: 0;
       background: var(--bg);
     }
 
@@ -250,6 +252,7 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
+      min-height: 0;
     }
     .ws-toolbar {
       padding: 18px 24px;
@@ -1070,7 +1073,7 @@
     .badge-notconv   { background: #fdeaea; color: #c0392b; }
 
     /* ---------------- Weekly Call Summary ---------------- */
-    .summary-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .summary-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
     .summary-head {
       display: flex; align-items: center; gap: 12px;
       padding: 13px 24px;
@@ -1086,11 +1089,28 @@
     .summary-head .legend { display: flex; gap: 8px; }
 
     .summary-list {
-      flex: 1; overflow-y: auto;
+      flex: 1; min-height: 0; overflow-y: auto;
       padding: 16px;
       display: flex; flex-direction: column; gap: 12px;
       align-content: start;
+      /* Always reserve room for the scrollbar and keep a soft end-padding so the
+         last row is never flush against the viewport edge. */
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+      scrollbar-color: #c4c9d4 transparent;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 28px;
     }
+    /* Make the scrollbar visible (macOS otherwise hides it until you scroll,
+       which makes the list look unscrollable). */
+    .summary-list::-webkit-scrollbar { width: 10px; }
+    .summary-list::-webkit-scrollbar-thumb {
+      background: #c4c9d4; border-radius: 8px;
+      border: 2px solid var(--panel);
+    }
+    .summary-list::-webkit-scrollbar-thumb:hover { background: #a9b0bf; }
+    .summary-list::-webkit-scrollbar-track { background: transparent; }
 
     /* A caller row (collapsible) */
     .person-row {
@@ -1099,6 +1119,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+      flex-shrink: 0;   /* keep full height in the flex-column list so it scrolls, not squashes */
     }
     .person-head {
       display: flex; align-items: center; gap: 13px;
@@ -1113,6 +1134,10 @@
       font-weight: 700; font-size: 14px; flex-shrink: 0;
     }
     .person-avatar.fse { background: #efe9fc; color: #6b3fc4; }
+    .person-avatar.team { background: #1f2937; color: #fff; font-size: 18px; }
+    .team-sub { font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
+    .person-row.team-row { border: 1px solid var(--blue-divider); }
+    .person-row.team-row .person-head { background: var(--blue-soft); }
     .person-id { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .person-name { font-size: 14px; font-weight: 700; color: var(--text); }
     .team-badge {
@@ -1170,6 +1195,64 @@
       font-size: 12px; line-height: 1.5; color: #5e6f9e;
     }
     .call-ai svg { width: 13px; height: 13px; color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+
+    /* Per-call label chip + lead → first-call time + red/green sentiment */
+    .call-label { margin-left: 8px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; vertical-align: middle; }
+    .call-tat { font-weight: 600; color: var(--text-dim); }
+    .sent-pill {
+      display: inline-flex; align-items: center; gap: 6px; margin-left: auto;
+      font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .03em; white-space: nowrap;
+    }
+    .sent-pill .sent-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .sent-pill.pos { background: #e6f6ec; color: #1f8a4c; }
+    .sent-pill.pos .sent-dot { background: #1f8a4c; }
+    .sent-pill.neg { background: #fdeaea; color: #c0392b; }
+    .sent-pill.neg .sent-dot { background: #c0392b; }
+    .call-top .sent-pill + .rec-btn { margin-left: 10px; }
+    .call-ai.pos { background: #eaf7ee; color: #2f7a4d; border-left: 3px solid #34b36a; }
+    .call-ai.pos svg { color: #1f8a4c; }
+    .call-ai.neg { background: #fdeeee; color: #a8443a; border-left: 3px solid #e26a5f; }
+    .call-ai.neg svg { color: #c0392b; }
+
+    /* Expanded person metrics panel */
+    .pm-panel {
+      padding: 16px; display: flex; flex-direction: column; gap: 14px;
+      background: #fafbfd; border-bottom: 1px solid var(--border-soft);
+    }
+    .pm-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; }
+    @media (max-width: 720px) { .pm-row { grid-template-columns: 1fr; } }
+    /* Single-row variant: Calls this week · Calls per day · Label-wise distribution */
+    .pm-row.pm-row3 { grid-template-columns: 190px minmax(230px, 1fr) minmax(280px, 1.35fr); align-items: stretch; }
+    @media (max-width: 980px) { .pm-row.pm-row3 { grid-template-columns: 1fr; } }
+    .pm-card { background: var(--panel); border: 1px solid var(--border); border-radius: 11px; padding: 13px 15px; }
+    .pm-card-head {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--text-muted); margin-bottom: 12px;
+    }
+    .pm-card-head .pm-card-sub { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--text-dim); margin-left: 6px; }
+    .pm-bignum { font-size: 40px; font-weight: 800; color: var(--blue); line-height: 1; display: flex; align-items: baseline; gap: 8px; }
+    .pm-bignum span { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    /* Folded-in KPI under the big number (Avg time · lead → first call) */
+    .pm-stat { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 3px; }
+    .pm-stat-val { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -.01em; line-height: 1; }
+    .pm-stat.accent .pm-stat-val { color: var(--blue); }
+    .pm-stat-lbl { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+
+    /* Calls-per-day bar graph */
+    .daychart { display: flex; align-items: flex-end; gap: 8px; min-height: 110px; }
+    .dc-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 5px; }
+    .dc-num { font-size: 11px; font-weight: 700; color: var(--text); }
+    .dc-bar { width: 100%; max-width: 30px; background: linear-gradient(180deg, #6f9bf9, #2f6bf6); border-radius: 6px 6px 0 0; }
+    .dc-day { font-size: 10.5px; font-weight: 600; color: var(--text-muted); }
+
+    /* Label-wise distribution */
+    .lbldist { display: flex; flex-direction: column; gap: 9px; }
+    .lbldist-row { display: flex; align-items: center; gap: 11px; }
+    .lbldist-tag { width: 62px; flex-shrink: 0; text-align: center; font-size: 10.5px; font-weight: 700; padding: 3px 0; border-radius: 20px; }
+    .lbldist-track { flex: 1; height: 16px; background: #eef0f4; border-radius: 7px; overflow: hidden; }
+    .lbldist-fill { height: 100%; border-radius: 7px; transition: width .25s ease; }
+    .lbldist-n { width: 24px; flex-shrink: 0; text-align: right; font-size: 13px; font-weight: 800; color: var(--text); }
 
     /* ---------------- Campaign routing: Sales + FSE additions ---------------- */
     /* Sales card sub-line (campaign) — keeps the card to name + number + campaign */
@@ -1294,9 +1377,10 @@
 
     /* ── Sales Performance tab ── */
     .perf-wrap {
-      flex: 1; overflow-y: auto; padding: 16px;
+      flex: 1; min-height: 0; overflow-y: auto; padding: 16px;
       display: flex; flex-direction: column; gap: 16px; align-content: start;
     }
+    .perf-wrap > * { flex-shrink: 0; }   /* don't squash cards; let the wrap scroll */
     .perf-filters {
       display: flex; align-items: center; gap: 11px; flex-wrap: wrap;
       background: var(--panel); border: 1px solid var(--border);
@@ -1324,7 +1408,7 @@
     }
     .perf-person:hover { border-color: var(--blue); }
 
-    .perf-hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+    .perf-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
     @media (max-width: 1080px) { .perf-hero { grid-template-columns: 1fr; } }
 
     .perf-card {
@@ -1346,6 +1430,9 @@
     .funnel-track { flex: 1; height: 26px; background: #f1f3f7; border-radius: 7px; overflow: hidden; }
     .funnel-fill { height: 100%; border-radius: 7px; background: linear-gradient(90deg, #6f9bf9, #2f6bf6); transition: width .25s ease; }
     .funnel-fill.conv { background: linear-gradient(90deg, #34b36a, #1f8a4c); }
+    .funnel-fill.allleads { background: linear-gradient(90deg, #3a4252, #232a37); }
+    /* Left-aligned fills */
+    .funnel-track.centered { display: flex; justify-content: flex-start; }
     .funnel-count { width: 36px; text-align: right; font-size: 15px; font-weight: 800; color: var(--text); flex-shrink: 0; }
     .funnel-foot { margin-top: 5px; font-size: 12px; color: var(--text-muted); }
     .funnel-foot b { color: var(--blue); font-weight: 700; }
@@ -2208,77 +2295,101 @@
     // ---- Weekly Call Summary ----
     const ICON_PHONE_CALL = '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>';
 
-    // Weekly calls per caller — Sales and FSE team members. (Week of 18–24 May 2026)
+    // Solid bar colour per end-of-week label (matches the .lbl-N chip palette).
+    const LABEL_COLORS = { 1: '#1f8a4c', 2: '#2f6bf6', 3: '#b25e09', 4: '#c0392b', 5: '#6b3fc4' };
+
+    // Weekly calls per salesperson. (Week of 18–24 May 2026)
+    // days       — calls placed each day, for the per-day bar graph.
+    // labelDist  — how many clients are sitting at each label BY THE END of the week
+    //              (a client's label changes through the journey; this is the snapshot).
+    // avgTat     — average time between lead generation and the first call.
+    // each log entry carries: label (1–5 at the time), sent ('pos'/'neg' from the
+    // call's AI summary → green/red), tat (lead → first call for that client).
     const WEEKLY_CALLERS = [
       {
-        name: 'Aarav Mehta', team: 'Sales', initials: 'AM', total: 24,
-        weekAI: 'Consistent qualification calls with solid discovery. Strong at surfacing pain points; could push harder on booking the FSE trial within the first call.',
+        name: 'Aarav Mehta', initials: 'AM', total: 24, avgTat: '3.8h',
+        days: [['Mon', 5], ['Tue', 4], ['Wed', 6], ['Thu', 4], ['Fri', 3], ['Sat', 2], ['Sun', 0]],
+        labelDist: { 1: 9, 2: 6, 3: 4, 4: 3, 5: 2 },
+        weekAI: 'Consistent qualification calls with solid discovery — strong at surfacing pain points and quick to first contact (3.8h avg). 15 of 24 clients ended the week at Label 1–2, but a handful drifted to Label 4–5: push harder to book the trial within the first call before intent cools.',
         log: [
-          { lead: 'Ananya Sharma', when: 'Mon, 18 May · 10:24 AM', dur: '06:12', ai: 'Knee pain, booking for self. High intent, comfortable with online. Moved to FSE — online trial scheduled.' },
-          { lead: 'Vikram Rao',    when: 'Tue, 19 May · 02:40 PM', dur: '04:38', ai: 'Enquiring for father (62). Wants offline trial near Indiranagar. Price-sensitive; needs a follow-up on plans.' },
-          { lead: 'Meera Joshi',   when: 'Thu, 21 May · 11:05 AM', dur: '03:21', ai: 'Post-pregnancy fitness goals, prefers online. Asked for trainer credentials before committing.' }
+          { lead: 'Ananya Sharma', when: 'Mon, 18 May · 10:24 AM', dur: '06:12', label: 1, sent: 'pos', tat: '1.5h', ai: 'Knee pain, booking for self. High intent, comfortable with online — trial scheduled. Strong qualification.' },
+          { lead: 'Rahul Verma',   when: 'Mon, 18 May · 04:05 PM', dur: '05:20', label: 1, sent: 'pos', tat: '1.1h', ai: 'Lower-back pain, desk job. Qualified fast and handed off for trial — clean call.' },
+          { lead: 'Meera Joshi',   when: 'Tue, 19 May · 11:05 AM', dur: '03:21', label: 2, sent: 'pos', tat: '2.1h', ai: 'Post-pregnancy goals, prefers online. Engaged; asked for trainer credentials before committing.' },
+          { lead: 'Vikram Rao',    when: 'Wed, 20 May · 02:40 PM', dur: '04:38', label: 3, sent: 'neg', tat: '6.2h', ai: 'Enquiring for father (62), offline near Indiranagar. Price-sensitive; follow-up on plans still pending.' },
+          { lead: 'Sara Khan',     when: 'Fri, 22 May · 09:30 AM', dur: '07:02', label: 5, sent: 'neg', tat: '4.0h', ai: 'Language gap flagged mid-call — handed to AI to call back in their language and summarise.' },
+          { lead: 'Karthik Reddy', when: 'Sat, 23 May · 12:15 PM', dur: '05:50', label: 4, sent: 'neg', tat: '9.4h', ai: 'Low urgency, intent 1/5. At risk — needs a win-back nudge or deprioritise.' }
         ]
       },
       {
-        name: 'Priya Nair', team: 'Sales', initials: 'PN', total: 18,
-        weekAI: 'Warm, empathetic calls with good rapport. Conversion strong on online leads; a few offline follow-ups are slipping — pending callbacks.',
+        name: 'Priya Nair', initials: 'PN', total: 19, avgTat: '5.1h',
+        days: [['Mon', 4], ['Tue', 5], ['Wed', 3], ['Thu', 4], ['Fri', 2], ['Sat', 1], ['Sun', 0]],
+        labelDist: { 1: 7, 2: 5, 3: 3, 4: 2, 5: 2 },
+        weekAI: 'Warm, empathetic calls with good rapport and strong online conversion — 12 of 19 clients ended at Label 1–2. First-call time is slower than target (5.1h avg) and a couple of offline follow-ups are slipping into Label 4. Tighten callback discipline to protect the at-risk ones.',
         log: [
-          { lead: 'Rahul Verma', when: 'Mon, 18 May · 09:50 AM', dur: '05:02', ai: 'Lower-back pain, desk job. Self booking, online preferred. Qualified — handed to FSE.' },
-          { lead: 'Sara Khan',   when: 'Tue, 19 May · 04:15 PM', dur: '07:44', ai: 'Diabetes-management goal. Interested in an offline trial; awaiting slot confirmation.' },
-          { lead: 'Aditya Nair', when: 'Thu, 21 May · 01:12 PM', dur: '02:55', ai: 'Quick call — not ready yet, requested a callback next week. Low urgency.' }
-        ]
-      },
-      {
-        name: 'Rohan Gupta', team: 'FSE', initials: 'RG', total: 15,
-        weekAI: 'Thorough assessments with clear plan explanations and a high trial-to-conversion rate. A couple of sessions ran long — watch scheduling buffers.',
-        log: [
-          { lead: 'Ananya Sharma', when: 'Tue, 19 May · 05:30 PM', dur: '18:20', ai: 'Online trial assessment. Mobility screen done; recommended a 3×/week plan. Client convinced — likely to convert.' },
-          { lead: 'Karan Bhatia',  when: 'Wed, 20 May · 10:00 AM', dur: '21:05', ai: 'Offline trial at the centre. Strength baseline taken. Some hesitation on pricing; sent plan options.' },
-          { lead: 'Divya Menon',   when: 'Thu, 21 May · 03:45 PM', dur: '15:48', ai: 'Online trial, knee-rehab focus. Explained progression; client requested a nutrition add-on.' }
-        ]
-      },
-      {
-        name: 'Sneha Iyer', team: 'FSE', initials: 'SI', total: 12,
-        weekAI: 'Strong technical assessments, especially rehab cases. Could improve on summarising clear next steps for the client at the end of each call.',
-        log: [
-          { lead: 'Vikram Rao',  when: 'Wed, 20 May · 06:00 PM', dur: '19:32', ai: 'Offline trial for father. Gentle mobility plan proposed; family supportive — offline plan likely.' },
-          { lead: 'Neha Kapoor', when: 'Thu, 21 May · 11:30 AM', dur: '16:10', ai: 'Online trial, PCOS fitness goals. Built a 4-week starter plan; good engagement throughout.' },
-          { lead: 'Arjun Das',   when: 'Fri, 22 May · 02:20 PM', dur: '13:27', ai: 'Online trial, weight-loss goal. Set expectations on timeline; client comfortable to proceed.' }
+          { lead: 'Neha Kapoor',  when: 'Mon, 18 May · 11:30 AM', dur: '06:10', label: 1, sent: 'pos', tat: '2.4h', ai: 'PCOS fitness goals, online. Built a 4-week starter plan; good engagement throughout.' },
+          { lead: 'Divya Menon',  when: 'Tue, 19 May · 03:45 PM', dur: '05:48', label: 2, sent: 'pos', tat: '3.6h', ai: 'Knee-rehab focus, online. Explained progression clearly; client requested a nutrition add-on.' },
+          { lead: 'Karan Bhatia', when: 'Wed, 20 May · 12:40 PM', dur: '06:25', label: 2, sent: 'pos', tat: '2.0h', ai: 'Strength baseline taken. Some pricing hesitation; sent plan options, leaning in.' },
+          { lead: 'Rohan Shetty', when: 'Thu, 21 May · 01:12 PM', dur: '04:02', label: 4, sent: 'neg', tat: '8.7h', ai: 'Stalled at 38% likely. At risk — send a testimonial to re-engage.' },
+          { lead: 'Aditya Nair',  when: 'Fri, 22 May · 09:50 AM', dur: '02:55', label: 4, sent: 'neg', tat: '11.0h', ai: 'Not ready yet, requested a callback next week. Low urgency — slow first contact hurt momentum.' },
+          { lead: 'Priya Desai',  when: 'Sat, 23 May · 10:05 AM', dur: '03:30', label: 5, sent: 'neg', tat: '5.5h', ai: 'Rescheduled for an AI callback; queued in AI Alerts.' }
         ]
       }
     ];
 
     function callItem(c) {
+      const sentTxt = c.sent === 'pos' ? 'Positive' : 'At risk';
       return `
-        <div class="call-item">
+        <div class="call-item ${c.sent === 'pos' ? 'pos' : 'neg'}">
           <div class="call-top">
             <div class="call-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_PHONE_CALL}</svg></div>
             <div class="call-meta">
-              <span class="call-lead">${c.lead}</span>
-              <span class="call-when">${c.when}</span>
+              <span class="call-lead">${c.lead}<span class="call-label lbl-${c.label}">Label ${c.label}</span></span>
+              <span class="call-when">${c.when} · <span class="call-tat">lead → 1st call ${c.tat}</span></span>
             </div>
+            <span class="sent-pill ${c.sent}"><span class="sent-dot"></span>${sentTxt}</span>
             <button type="button" class="rec-btn">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg>
               Recording <span class="dur">${c.dur}</span>
             </button>
           </div>
-          <div class="call-ai">
+          <div class="call-ai ${c.sent}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>
             <span>${c.ai}</span>
           </div>
         </div>`;
     }
 
+    // Per-day calls bar graph (value label sits above each bar).
+    function dayChart(days) {
+      const maxN = Math.max(1, ...days.map(d => d[1]));
+      return `<div class="daychart">${days.map(([d, n]) => `
+        <div class="dc-col">
+          <span class="dc-num">${n}</span>
+          <div class="dc-bar" style="height:${n ? Math.max(6, Math.round(n / maxN * 80)) : 2}px;${n ? '' : 'opacity:.22'}"></div>
+          <span class="dc-day">${d}</span>
+        </div>`).join('')}</div>`;
+    }
+
+    // End-of-week label distribution — one horizontal bar per label.
+    function labelDistChart(dist) {
+      const total = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
+      return `<div class="lbldist">${[1, 2, 3, 4, 5].map(l => {
+        const n = dist[l] || 0;
+        return `<div class="lbldist-row">
+          <span class="lbldist-tag lbl-${l}">Label ${l}</span>
+          <div class="lbldist-track"><div class="lbldist-fill" style="width:${Math.max(2, Math.round(n / total * 100))}%;background:${LABEL_COLORS[l]}"></div></div>
+          <span class="lbldist-n">${n}</span>
+        </div>`;
+      }).join('')}</div>`;
+    }
+
     function personRow(p) {
-      const teamCls = p.team === 'Sales' ? 'team-sales' : 'team-fse';
-      const avCls = p.team === 'Sales' ? '' : 'fse';
       return `
         <div class="person-row">
           <div class="person-head">
-            <div class="person-avatar ${avCls}">${p.initials}</div>
+            <div class="person-avatar">${p.initials}</div>
             <div class="person-id">
               <span class="person-name">${p.name}</span>
-              <span class="team-badge ${teamCls}">${p.team} Team</span>
             </div>
             <div class="person-total">
               <div class="num">${p.total}</div>
@@ -2287,12 +2398,86 @@
             <svg class="person-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
           <div class="person-body">
+            <div class="pm-panel">
+              <div class="pm-row pm-row3">
+                <div class="pm-card">
+                  <div class="pm-card-head">Calls this week</div>
+                  <div class="pm-bignum">${p.total}<span>calls</span></div>
+                  <div class="pm-stat accent">
+                    <span class="pm-stat-val">${p.avgTat}</span>
+                    <span class="pm-stat-lbl">Avg time · lead → first call</span>
+                  </div>
+                </div>
+                <div class="pm-card">
+                  <div class="pm-card-head">Calls per day</div>
+                  ${dayChart(p.days)}
+                </div>
+                <div class="pm-card">
+                  <div class="pm-card-head">Label-wise distribution <span class="pm-card-sub">where each client sits by end of week</span></div>
+                  ${labelDistChart(p.labelDist)}
+                </div>
+              </div>
+            </div>
             <div class="ai-summary">
-              <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>AI Summary — This Week</div>
+              <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>AI Summary — ${p.name.split(' ')[0]}'s performance this week</div>
               <div class="ai-summary-body">${p.weekAI}</div>
             </div>
-            <div class="call-list-head">Calls this week · ${p.total} total</div>
+            <div class="call-list-head">Clients addressed · ${p.log.length} clients · ${p.total} calls</div>
             ${p.log.map(callItem).join('')}
+          </div>
+        </div>`;
+    }
+
+    // Combined team rollup — same number panel + AI summary as a person, but
+    // aggregated across all reps. No client-level list.
+    function teamRow() {
+      const reps = WEEKLY_CALLERS;
+      const total = reps.reduce((s, p) => s + p.total, 0);
+      const days = reps[0].days.map((d, i) => [d[0], reps.reduce((s, p) => s + p.days[i][1], 0)]);
+      const labelDist = {};
+      [1, 2, 3, 4, 5].forEach(l => { labelDist[l] = reps.reduce((s, p) => s + (p.labelDist[l] || 0), 0); });
+      const avgTat = (reps.reduce((s, p) => s + parseFloat(p.avgTat) * p.total, 0) / total).toFixed(1) + 'h';
+      const l12 = labelDist[1] + labelDist[2], l45 = labelDist[4] + labelDist[5];
+      const weekAI = `Across both reps the team logged <b>${total} calls</b> this week at a ${avgTat} average lead → first-call time. ${l12} of ${total} clients ended at Label 1–2 — a healthy top of funnel — while ${l45} slipped to Label 4–5 and need win-back attention. Aarav leads on volume and speed-to-contact; Priya converts well on online leads but is slower to first call. Team focus next week: tighten the first-call SLA and protect the at-risk Label 4–5 cohort.`;
+      return `
+        <div class="person-row team-row expanded">
+          <div class="person-head">
+            <div class="person-avatar team">∑</div>
+            <div class="person-id">
+              <span class="person-name">Sales Team — Combined</span>
+              <span class="team-sub">${reps.length} salespeople · this week</span>
+            </div>
+            <div class="person-total">
+              <div class="num">${total}</div>
+              <div class="lbl">calls this week</div>
+            </div>
+            <svg class="person-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="person-body">
+            <div class="pm-panel">
+              <div class="pm-row pm-row3">
+                <div class="pm-card">
+                  <div class="pm-card-head">Calls this week</div>
+                  <div class="pm-bignum">${total}<span>calls</span></div>
+                  <div class="pm-stat accent">
+                    <span class="pm-stat-val">${avgTat}</span>
+                    <span class="pm-stat-lbl">Avg time · lead → first call</span>
+                  </div>
+                </div>
+                <div class="pm-card">
+                  <div class="pm-card-head">Calls per day</div>
+                  ${dayChart(days)}
+                </div>
+                <div class="pm-card">
+                  <div class="pm-card-head">Label-wise distribution <span class="pm-card-sub">where each client sits by end of week</span></div>
+                  ${labelDistChart(labelDist)}
+                </div>
+              </div>
+            </div>
+            <div class="ai-summary">
+              <div class="ai-summary-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_SPARK}</svg>AI Summary — Sales team performance this week</div>
+              <div class="ai-summary-body">${weekAI}</div>
+            </div>
           </div>
         </div>`;
     }
@@ -2301,15 +2486,12 @@
       return `
         <div class="summary-wrap">
           <div class="summary-head">
-            <h3>Weekly Call Summary</h3>
+            <h3>Sales Team Performance</h3>
             <span class="week-pill">Week of 18 – 24 May 2026</span>
             <span class="spacer"></span>
-            <div class="legend">
-              <span class="team-badge team-sales">Sales Team</span>
-              <span class="team-badge team-fse">FSE Team</span>
-            </div>
           </div>
           <div class="summary-list">
+            ${teamRow()}
             ${WEEKLY_CALLERS.map(personRow).join('')}
           </div>
         </div>`;
@@ -2464,6 +2646,7 @@
       week: {
         'Aarav Mehta': {
           leads: 22, called: 19, trial: 13, conversions: 8, captured: 178000, tatHours: 1.8, convertDays: 5.4,
+          labelDist: { 1: 4, 2: 3, 3: 3, 4: 2, 5: 2 },
           prospects: [
             { lead: 'Karan Bhatia', amount: 44999, likelihood: 'High', ai: 'Offline trial done, hesitating on price. AI reads intent at 4/5 — send the plan comparison and a testimonial today.' },
             { lead: 'Vikram Rao', amount: 24999, likelihood: 'Medium', ai: 'Booking for father (62). Warm but price-sensitive — AI suggests leading with the 3-month offline plan plus a free doctor consult.' },
@@ -2481,6 +2664,7 @@
         },
         'Priya Nair': {
           leads: 18, called: 15, trial: 9, conversions: 6, captured: 132000, tatHours: 2.9, convertDays: 6.8,
+          labelDist: { 1: 3, 2: 3, 3: 2, 4: 2, 5: 2 },
           prospects: [
             { lead: 'Neha Kapoor', amount: 46998, likelihood: 'High', ai: 'PCOS fitness, strong engagement on the trial. AI: nudge toward the 6-month plan with the nutrition add-on.' },
             { lead: 'Meera Joshi', amount: 22999, likelihood: 'High', ai: 'Post-pregnancy goals, asked for trainer credentials. AI: share certified-trainer profiles — likely to book online.' },
@@ -2499,6 +2683,7 @@
       month: {
         'Aarav Mehta': {
           leads: 78, called: 71, trial: 44, conversions: 29, captured: 648000, tatHours: 2.1, convertDays: 6.0,
+          labelDist: { 1: 14, 2: 11, 3: 10, 4: 8, 5: 6 },
           prospects: [
             { lead: 'Karan Bhatia', amount: 44999, likelihood: 'High', ai: 'High intent after the offline trial; only price stands in the way. AI: offer the 6-month plan at a small concession.' },
             { lead: 'Lakshmi Iyer', amount: 22999, likelihood: 'High', ai: 'Knee-rehab case comparing us with a physio clinic. AI: emphasise at-home convenience and progress tracking.' },
@@ -2525,6 +2710,7 @@
         },
         'Priya Nair': {
           leads: 64, called: 58, trial: 33, conversions: 21, captured: 458000, tatHours: 3.1, convertDays: 7.2,
+          labelDist: { 1: 12, 2: 10, 3: 9, 4: 7, 5: 5 },
           prospects: [
             { lead: 'Neha Kapoor', amount: 46998, likelihood: 'High', ai: 'Strong trial engagement. AI: 6-month plan with the nutrition add-on is the natural next step.' },
             { lead: 'Meera Joshi', amount: 22999, likelihood: 'High', ai: 'Wants trainer credentials before committing. AI: send certified-trainer profiles.' },
@@ -2549,6 +2735,7 @@
       quarter: {
         'Aarav Mehta': {
           leads: 214, called: 196, trial: 121, conversions: 79, captured: 1786000, tatHours: 2.0, convertDays: 6.3,
+          labelDist: { 1: 40, 2: 30, 3: 28, 4: 20, 5: 17 },
           prospects: [
             { lead: 'Naveen Kumar', amount: 49998, likelihood: 'High', ai: 'Corporate wellness enquiry for both parents. AI: bundle two memberships — high-value deal.' },
             { lead: 'Karan Bhatia', amount: 44999, likelihood: 'High', ai: 'Only price stands between trial and close. AI: a small 6-month concession should convert.' },
@@ -2579,6 +2766,7 @@
         },
         'Priya Nair': {
           leads: 178, called: 162, trial: 96, conversions: 58, captured: 1268000, tatHours: 3.0, convertDays: 7.0,
+          labelDist: { 1: 34, 2: 28, 3: 24, 4: 18, 5: 16 },
           prospects: [
             { lead: 'Neha Kapoor', amount: 46998, likelihood: 'High', ai: '6-month plan with the nutrition add-on is the natural next step.' },
             { lead: 'Ritu Saxena', amount: 24999, likelihood: 'Medium', ai: 'Senior parent wants offline near Whitefield — confirm centre proximity.' },
@@ -2624,10 +2812,14 @@
         fresh: recs.flatMap(r => tag(r.misses.fresh, r)),
         cold: recs.flatMap(r => tag(r.misses.cold, r))
       };
+      const labelDist = [1, 2, 3, 4, 5].reduce((acc, l) => {
+        acc[l] = recs.reduce((t, r) => t + (r.labelDist[l] || 0), 0); return acc;
+      }, {});
       return {
         multi: names.length > 1,
         leads: sum('leads'), called: sum('called'), trial: sum('trial'),
         conversions: sum('conversions'), captured: sum('captured'),
+        missedLeads: sum('leads') - sum('called'), labelDist,
         tatHours, convertDays, prospects, losses, misses,
         potential: prospects.reduce((s, p) => s + p.amount, 0),
         missed: losses.reduce((s, l) => s + l.amount, 0)
@@ -2637,6 +2829,7 @@
     function salesPerfTab() {
       const s = perfSlice(salesFilter.period, salesFilter.person);
       const periodLbl = PERIOD_LABELS[salesFilter.period];
+      const period = salesFilter.period;
       const firstName = (full) => full.split(' ')[0];
       const owner = (o) => s.multi ? `<span class="owner-tag">${firstName(o.owner)}</span>` : '';
 
@@ -2654,34 +2847,31 @@
           <select class="perf-person" id="perfPerson">${personOpts}</select>
         </div>`;
 
-      // Funnel
-      const stages = [
-        { cls: '', label: 'Leads', n: s.leads },
-        { cls: '', label: 'Called', n: s.called },
-        { cls: '', label: 'Trial', n: s.trial },
-        { cls: 'conv', label: 'Converted', n: s.conversions }
-      ];
-      const maxN = s.leads || 1;
-      const funnelRows = stages.map(st => `
+      // Client funnel — all leads at the top, narrowing through the labels to Converted.
+      const funnelStages = [{ label: 'All Leads', n: s.leads, all: true }]
+        .concat([1, 2, 3, 4, 5].map(l => ({ label: `Label ${l}`, n: s.labelDist[l] || 0, color: LABEL_COLORS[l] })))
+        .concat([{ label: 'Converted', n: s.conversions, conv: true }]);
+      const fMax = s.leads || 1;
+      const funnelRows = funnelStages.map(st => `
         <div class="funnel-row">
           <span class="funnel-label">${st.label}</span>
-          <div class="funnel-track"><div class="funnel-fill ${st.cls}" style="width:${Math.max(6, st.n / maxN * 100)}%"></div></div>
+          <div class="funnel-track centered"><div class="funnel-fill ${st.conv ? 'conv' : ''} ${st.all ? 'allleads' : ''}" style="width:${Math.max(5, Math.round(st.n / fMax * 100))}%${st.color ? `;background:${st.color}` : ''}"></div></div>
           <span class="funnel-count">${st.n}</span>
         </div>`).join('');
       const convRate = s.leads ? Math.round(s.conversions / s.leads * 100) : 0;
       const funnel = `
         <div class="perf-card">
-          <div class="perf-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CHART}</svg>Conversion Funnel<span class="pc-sub">${periodLbl}</span></div>
+          <div class="perf-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${ICON_CHART}</svg>Client Funnel · by label<span class="pc-sub">${periodLbl}</span></div>
           <div class="perf-funnel">
             ${funnelRows}
-            <div class="funnel-foot">Conversion rate <b>${convRate}%</b> · ${s.conversions} of ${s.leads} leads converted</div>
+            <div class="funnel-foot"><b>${s.conversions} / ${s.leads}</b> conversions · ${convRate}% of all leads converted</div>
           </div>
         </div>`;
 
-      // Money rail + time chips
+      // Revenue rail + time chips
       const money = `
         <div class="perf-card">
-          <div class="perf-card-head">Revenue</div>
+          <div class="perf-card-head">Revenue<span class="pc-sub">${periodLbl}</span></div>
           <div class="perf-money">
             <div class="money-tile cap"><span class="mt-label">Amount Captured</span><span class="mt-val">${inrShort(s.captured)}</span><span class="mt-sub">from ${s.conversions} conversions · credited</span></div>
             <div class="money-tile miss"><span class="mt-label">Amount Missed</span><span class="mt-val">${inrShort(s.missed)}</span><span class="mt-sub">from ${s.losses.length} loss${s.losses.length === 1 ? '' : 'es'}</span></div>
@@ -2692,8 +2882,6 @@
             </div>
           </div>
         </div>`;
-
-      const hero = `<div class="perf-hero">${funnel}${money}</div>`;
 
       // Open prospects
       const prospectRows = s.prospects.length ? s.prospects.map(p => `
@@ -2713,7 +2901,7 @@
           <div class="perf-list">${prospectRows}</div>
         </div>`;
 
-      // Misses (3 grouped types)
+      // Misses (3 grouped reasons)
       const missTypes = [
         { key: 'reminder', title: 'Reminders missed' },
         { key: 'fresh', title: 'Fresh leads pending > 7 days' },
@@ -2728,7 +2916,7 @@
       }).join('');
       const missesCard = `
         <div class="perf-card">
-          <div class="perf-card-head">Misses<span class="pc-sub">${missCount} flagged</span></div>
+          <div class="perf-card-head">Misses<span class="pc-sub"><b>${s.missedLeads} / ${s.leads}</b> leads missed · ${missCount} flagged</span></div>
           ${missCount ? missGroups : '<div class="perf-list"><div class="aempty">No misses in this period — reminders, SLAs and fresh-lead ages are all on track.</div></div>'}
         </div>`;
 
@@ -2748,7 +2936,7 @@
           <div class="perf-list">${lossRows}</div>
         </div>`;
 
-      return `<div class="perf-wrap">${filters}${hero}${prospectsCard}${missesCard}${lossesCard}</div>`;
+      return `<div class="perf-wrap">${filters}<div class="perf-hero">${money}${funnel}</div>${prospectsCard}${missesCard}${lossesCard}</div>`;
     }
 
     function setLeadsTab(tab) {
@@ -2776,7 +2964,7 @@
             <div class="seg">
               <button class="seg-btn active" data-tab="alerts">Alerts</button>
               <button class="seg-btn" data-tab="leads">Leads</button>
-              <button class="seg-btn" data-tab="summary">Weekly Summary</button>
+              <button class="seg-btn" data-tab="summary">Sales Team Performance</button>
               <button class="seg-btn" data-tab="sales">Sales Performance</button>
             </div>
           </div>
